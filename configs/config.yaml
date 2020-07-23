@@ -1,0 +1,25 @@
+# 服务配置
+Server:
+  RunMode: debug # 设置gin 的运行模式
+  HttpPort: 8000 # 默认的 HTTP 监听端口
+  ReadTimeout: 60 # 允许读取和写入的最大持续时间
+  WriteTimeout: 60
+#应用配置
+App:
+  DefaultPageSize: 10 # 默认每页数量
+  MaxPageSize: 100 # 所允许的最大每页数量
+  LogSavePath: storage/logs # 默认的应用日志存储路径
+  LogFileName: app
+  LogFileExt: .log
+#数据库配置
+Database:
+  DBType: mysql
+  Username: root
+  Password: root
+  Host: 127.0.0.1:3306
+  DBName: blog_service
+  Table_prefix: blog_
+  Charset: utf8
+  ParseTime: True
+  MaxIdleConns: 10
+  MaxOpenConns: 30
