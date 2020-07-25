@@ -30,7 +30,7 @@ func (e *Error) Msgf(args []interface{}) string {
 	return fmt.Sprintf(e.Msg, args...)
 }
 
-func (e *Error) withDetails(details ...string) *Error {
+func (e *Error) WithDetails(details ...string) *Error {
 	e.Details = []string{}
 	for _, d := range details {
 		e.Details = append(e.Details, d)

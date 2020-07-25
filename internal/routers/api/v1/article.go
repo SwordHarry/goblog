@@ -13,6 +13,13 @@ func NewArticle() *Article {
 	return &Article{}
 }
 
+// @Summary 获取单个文章
+// @Produce json
+// @Param id path int true "文章ID"
+// @Success 200 {object} model.Article "成功"
+// @Failure 400 {object} errcode.Error "请求错误"
+// @Failure 500 {object} errcode.Error "内部错误"
+// @Router /api/v1/articles/{id} [get]
 func (a *Article) Get(c *gin.Context) {
 
 }

@@ -16,7 +16,7 @@ import (
 // @title 博客系统
 // @version 1.0
 // @description Go 编程之旅：一起用 Go 做项目
-// @termOfService
+// @termOfService https://github.com/SwordHarry/goblog
 func main() {
 	// 设置 gin 的运行模式
 	gin.SetMode(global.ServerSetting.RunMode)

@@ -39,4 +39,26 @@
     - app
         - pagination.go 分页处理
         - app.go 响应处理
-    
+### 6.swagger 接口文档
+- docs: swag init 自动生成
+    - docs.go
+    - swagger.json
+    - swagger.yaml
+
+/internal/routers/api/v1/*.go
+/main.go
+在两者中添加相应注解，自动生成 swagger 文档
+
+记得在 router.go 中进行路由注册
+```go
+// 注册 swagger 接口文档路由
+r := gin.New()
+r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+```
+### 7.接口校验
+
+### 8.国际化处理
+/internal/middleware/translations.go
+    进行 validator 验证器的注册和语言的载入
+/pkg/app/form.go
+    进行入参校验的二次封装，若绑定错误则使用国际化处理错误信息

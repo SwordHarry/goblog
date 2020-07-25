@@ -1,6 +1,11 @@
 package v1
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"goblog/global"
+	"goblog/pkg/app"
+	"goblog/pkg/errcode"
+)
 
 type Tag struct {
 }
@@ -24,7 +29,18 @@ func (t *Tag) Get(c *gin.Context) {
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/tags [get]
 func (t *Tag) List(c *gin.Context) {
-
+	param := struct {
+		Name  string `form:"name" binding:"max=100"`
+		State uint8  `form:"state,default=1" binding:"oneof=0 1"`
+	}{}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	response.ToResponse(gin.H{})
 }
 
 // @Summary 新增标签
