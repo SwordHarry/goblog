@@ -75,7 +75,7 @@ func updateTimeStampForCreateCallback(scope *gorm.Scope) {
 // 更新行为的回调
 func updateTimeStampForUpdateCallback(scope *gorm.Scope) {
 	if _, ok := scope.Get("gorm:update_column"); !ok {
-		_ = scope.SetColumn("ModifiedOn", time.Now().Unix())
+		_ = scope.SetColumn("ModifiedOn", getNowTimeUnix())
 	}
 }
 func deleteCallback(scope *gorm.Scope) {
