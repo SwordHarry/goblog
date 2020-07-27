@@ -5,6 +5,7 @@ import (
 	"goblog/pkg/app"
 )
 
+// 因为 tag 只有 name 和 state 两个属性，故不尽兴 dao 层的结构体封装
 func (d *Dao) CountTag(name string, state uint8) (int, error) {
 	tag := model.Tag{Name: name, State: state}
 	return tag.Count(d.engine)

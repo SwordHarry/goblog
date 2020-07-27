@@ -32,7 +32,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
 }
 
 // 配置初始化
