@@ -17,3 +17,5 @@
 2020/07/26 15:55:53 {"callers":["/Users/huangzijian/Documents/workspace/project/goblog/main.go: 48 main.init.0"],"level":"error","message":"app.BindAndValid errs: ModifiedBy为必填字段","time":1595750153133704000}
 2020/07/26 15:56:05 {"callers":["/Users/huangzijian/Documents/workspace/project/goblog/main.go: 48 main.init.0"],"level":"error","message":"app.BindAndValid errs: ModifiedBy为必填字段","time":1595750165091443000}
 2020/07/26 16:04:21 {"callers":["/Users/huangzijian/Documents/workspace/project/goblog/main.go: 48 main.init.0"],"level":"error","message":"app.BindAndValid errs: Name长度必须至少为2个字符","time":1595750661096561000}
+2020/07/29 16:15:45 {"callers":["/Users/huangzijian/Documents/workspace/project/goblog/main.go: 47 main.init.0"],"level":"error","message":"app.BindAndValid errs: CoverImageUrl必须是一个有效的URL","time":1596010545792968000}
+2020/07/29 16:24:21 {"callers":["/Users/huangzijian/Documents/workspace/project/goblog/main.go: 47 main.init.0"],"level":"error","message":"app.BindAndValid errs: ","time":1596011061573576000}

@@ -29,6 +29,12 @@ type TagSwagger struct {
 // update 更新字段
 // delete 删除
 // count 统计记录数
+
+func (t *Tag) Get(db *gorm.DB) (tag *Tag, err error) {
+	err = db.Where("id = ? and is_del = ? and state = ?", t.ID, 0, t.State).First(tag).Error
+	return
+}
+
 // count tag
 func (t *Tag) Count(db *gorm.DB) (int, error) {
 	var count int
