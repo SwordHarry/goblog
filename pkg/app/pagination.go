@@ -10,7 +10,7 @@ import (
 
 // 将参数中的 page 参数提取出来
 func GetPage(c *gin.Context) int {
-	page := convert.StrTo(c.Query("page")).MuseInt()
+	page := convert.StrTo(c.Query("page")).MustInt()
 	if page <= 0 {
 		return 1
 	}
@@ -19,7 +19,7 @@ func GetPage(c *gin.Context) int {
 
 // 将参数中的 pageSize 参数提取出来
 func GetPageSize(c *gin.Context) int {
-	pageSize := convert.StrTo(c.Query("page_size")).MuseInt()
+	pageSize := convert.StrTo(c.Query("page_size")).MustInt()
 	if pageSize <= 0 {
 		return global.AppSetting.DefaultPageSize
 	}

@@ -12,7 +12,7 @@ func (s StrTo) Int() (int, error) {
 	return strconv.Atoi(s.String())
 }
 
-func (s StrTo) MuseInt() int {
+func (s StrTo) MustInt() int {
 	v, err := s.Int()
 	if err != nil {
 		panic(err)
