@@ -3,6 +3,7 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"goblog/global"
+	"goblog/internal/routers/api"
 	"goblog/internal/service"
 	"goblog/pkg/app"
 	"goblog/pkg/convert"
@@ -28,7 +29,7 @@ func (a *Article) Get(c *gin.Context) {
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {
-		invalidForBind(response, errs)
+		api.InvalidForBind(response, errs)
 		return
 	}
 	svc := service.New(c.Request.Context())
@@ -58,7 +59,7 @@ func (a *Article) List(c *gin.Context) {
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {
-		invalidForBind(response, errs)
+		api.InvalidForBind(response, errs)
 		return
 	}
 	svc := service.New(c.Request.Context())
@@ -91,7 +92,7 @@ func (a *Article) Create(c *gin.Context) {
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {
-		invalidForBind(response, errs)
+		api.InvalidForBind(response, errs)
 		return
 	}
 	svc := service.New(c.Request.Context())
@@ -123,7 +124,7 @@ func (a *Article) Update(c *gin.Context) {
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {
-		invalidForBind(response, errs)
+		api.InvalidForBind(response, errs)
 		return
 	}
 	svc := service.New(c.Request.Context())
@@ -149,7 +150,7 @@ func (a *Article) Delete(c *gin.Context) {
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {
-		invalidForBind(response, errs)
+		api.InvalidForBind(response, errs)
 		return
 	}
 	svc := service.New(c.Request.Context())

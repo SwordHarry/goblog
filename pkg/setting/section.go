@@ -35,6 +35,12 @@ type DatabaseSettingS struct {
 	MaxOpenConns int
 }
 
+type JWTSettingS struct {
+	Secret string
+	Issuer string
+	Expire time.Duration
+}
+
 // 将配置文件中的部分 读取入结构体中
 func (s *Setting) ReadSection(k string, v interface{}) error {
 	return s.vp.UnmarshalKey(k, v)

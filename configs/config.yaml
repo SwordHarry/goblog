@@ -31,3 +31,8 @@ Database:
   ParseTime: True
   MaxIdleConns: 10
   MaxOpenConns: 30
+# 鉴权配置
+JWT:
+  Secret: hzj # 不能外泄
+  Issuer: blog-service
+  Expire: 7200

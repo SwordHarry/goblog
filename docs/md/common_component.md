@@ -62,3 +62,7 @@ r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
     进行 validator 验证器的注册和语言的载入
 /pkg/app/form.go
     进行入参校验的二次封装，若绑定错误则使用国际化处理错误信息
+
+### 9.jwt 鉴权
+json web token
+采用 jwt-go 库进行开发

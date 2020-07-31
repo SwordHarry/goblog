@@ -1,4 +1,4 @@
-package v1
+package api
 
 import (
 	"goblog/global"
@@ -8,7 +8,7 @@ import (
 
 // 封装请求中的重复代码
 // 写入日志，并将错误信息写入 response
-func invalidForBind(response *app.Response, errs app.ValidErrors) {
+func InvalidForBind(response *app.Response, errs app.ValidErrors) {
 	global.Logger.Errorf("app.BindAndValid errs: %v", errs)
 	response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
 }

@@ -7,6 +7,7 @@ import (
 	_ "goblog/docs"
 	"goblog/global"
 	"goblog/internal/middleware"
+	"goblog/internal/routers/api"
 	"goblog/internal/routers/api/v1"
 	"net/http"
 )
@@ -24,6 +25,8 @@ func NewRouter() *gin.Engine {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// 静态文件地址
 	r.StaticFS("/static", http.Dir(global.AppSetting.UploadSavePath))
+	// jwt 验证接口
+	r.GET("/auth", api.GetAuth)
 	article := v1.NewArticle()
 	tag := v1.NewTag()
 	apiV1 := r.Group(apiV1Str)
@@ -41,7 +44,7 @@ func NewRouter() *gin.Engine {
 		apiV1.GET("/articles/:id", article.Get)
 		apiV1.GET("/articles", article.List)
 		// upload
-		apiV1.POST("/upload", UploadFile)
+		apiV1.POST("/upload", api.UploadFile)
 	}
 	return r
 }

@@ -10,7 +10,11 @@ middleware：中间件
 
 
 pkg：内容为通用组件内容，贯穿整个project，如：
-- app：response 响应处理；pagination 分页处理；错误信息国际化
+- app：
+    - response 响应处理；
+    - pagination 分页处理；
+    - form 错误信息国际化；
+    - jwt 鉴权处理;
 - errcode：通用错误码
 - logger：日志
 - setting：project 配置<br/>配置读入 global 中
