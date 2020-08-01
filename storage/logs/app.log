@@ -33,3 +33,6 @@
 2020/07/31 23:06:09 {"callers":["/Users/huangzijian/Documents/workspace/project/goblog/main.go: 47 main.init.0"],"level":"error","message":"app.GenerateToken err: key is of invalid type","time":1596207969774112000}
 2020/07/31 23:16:24 {"callers":["/Users/huangzijian/Documents/workspace/project/goblog/main.go: 47 main.init.0"],"level":"error","message":"app.GenerateToken err: key is of invalid type","time":1596208584990522000}
 2020/07/31 23:17:16 {"callers":["/Users/huangzijian/Documents/workspace/project/goblog/main.go: 47 main.init.0"],"level":"error","message":"app.GenerateToken err: key is of invalid type","time":1596208636486535000}
+2020/08/01 16:08:55 {"callers":["/Users/huangzijian/Documents/workspace/project/goblog/main.go: 47 main.init.0"],"level":"error","message":"app.GenerateToken err: key is of invalid type","time":1596269335299304000}
+2020/08/01 16:16:11 {"callers":["/Users/huangzijian/Documents/workspace/project/goblog/main.go: 47 main.init.0"],"level":"error","message":"app.GenerateToken err: key is of invalid type","time":1596269771830152000}
+2020/08/01 16:20:15 {"callers":["/Users/huangzijian/Documents/workspace/project/goblog/main.go: 47 main.init.0"],"level":"error","message":"app.GenerateToken err: key is of invalid type","time":1596270015785502000}

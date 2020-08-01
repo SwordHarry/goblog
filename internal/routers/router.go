@@ -30,6 +30,7 @@ func NewRouter() *gin.Engine {
 	article := v1.NewArticle()
 	tag := v1.NewTag()
 	apiV1 := r.Group(apiV1Str)
+	apiV1.Use(middleware.JWT())
 	{
 		// tags
 		apiV1.POST("/tags", tag.Create)

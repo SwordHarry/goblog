@@ -32,14 +32,15 @@ func GenerateToken(appKey, appSecret string) (string, error) {
 	// jwt.NewWithClaims 根据结构体生成 token 实例
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	// 生成签名字符串
-	return tokenClaims.SignedString(GetJWTSecret())
+	// key 需要是 []byte 类型
+	return tokenClaims.SignedString([]byte(GetJWTSecret()))
 }
 
 // 解析和校验 token
 func ParseToken(token string) (*Claims, error) {
 	// ParseWithClaims 用于解析鉴权的声明
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return GetJWTSecret(), nil
+		return []byte(GetJWTSecret()), nil
 	})
 	if tokenClaims != nil {
 		if claims, ok := tokenClaims.Claims.(*Claims); ok && tokenClaims.Valid {

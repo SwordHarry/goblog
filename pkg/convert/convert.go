@@ -13,10 +13,7 @@ func (s StrTo) Int() (int, error) {
 }
 
 func (s StrTo) MustInt() int {
-	v, err := s.Int()
-	if err != nil {
-		panic(err)
-	}
+	v, _ := s.Int() // ignore error
 	return v
 }
 
@@ -26,9 +23,6 @@ func (s StrTo) Uint32() (uint32, error) {
 }
 
 func (s StrTo) MustUint32() uint32 {
-	v, err := s.Uint32()
-	if err != nil {
-		panic(err)
-	}
+	v, _ := s.Uint32() // ignore error
 	return v
 }

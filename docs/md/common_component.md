@@ -66,3 +66,9 @@ r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 ### 9.jwt 鉴权
 json web token
 采用 jwt-go 库进行开发
+secret-key 需要是 []byte 类型
+payload 中不能明文存储重要信息，因为可以进行 base64 的解码
+
+### 10. 访问日志记录
+自定义 accessLogger，覆盖 c.Writer
+### 11. 异常捕获处理
