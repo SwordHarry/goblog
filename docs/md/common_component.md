@@ -72,3 +72,6 @@ payload 中不能明文存储重要信息，因为可以进行 base64 的解码
 ### 10. 访问日志记录
 自定义 accessLogger，覆盖 c.Writer
 ### 11. 异常捕获处理
+/internal/middleware/recovery.go
+### 12. 邮件报警处理
+/pkg/email

@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"goblog/global"
 	"goblog/pkg/logger"
@@ -38,5 +39,8 @@ func AccessLog() gin.HandlerFunc {
 		global.Logger.WithFields(fields).
 			Infof("access log: method: %s, status_code: %d, begin_time: %d, end_time: %d",
 				c.Request.Method, bodyWriter.Status(), beginTime, endTime)
+		// 控制台打印
+		fmt.Printf("access log: method: %s, status_code: %d, begin_time: %d, end_time: %d",
+			c.Request.Method, bodyWriter.Status(), beginTime, endTime)
 	}
 }

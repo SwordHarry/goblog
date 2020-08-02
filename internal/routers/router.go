@@ -18,8 +18,11 @@ const (
 
 func NewRouter() *gin.Engine {
 	r := gin.New()
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
+	// 访问日志记录中间件
+	r.Use(middleware.AccessLog())
+	// recover 加 邮件报警 中间件
+	r.Use(middleware.Recovery())
+	// 国际化中间件
 	r.Use(middleware.Translations())
 	// 注册 swagger 接口文档路由
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

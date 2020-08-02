@@ -36,3 +36,13 @@ JWT:
   Secret: hzj # 不能外泄
   Issuer: blog-service
   Expire: 7200
+# 邮件配置
+Email:
+  Host: smtp.qq.com
+  Port: 465
+  UserName: 2398960068@qq.com
+  Password: fmumyautezwbebbj # 授权码
+  IsSSL: true
+  From: 2398960068@qq.com
+  To:
+    - 2398960068@qq.com

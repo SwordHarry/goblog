@@ -12,6 +12,7 @@ var (
 	DatabaseSetting *setting.DatabaseSettingS
 	Logger          *logger.Logger
 	JWTSetting      *setting.JWTSettingS
+	EmailSetting    *setting.EmailSettingS
 )
 
 const DebugMode = "debug"

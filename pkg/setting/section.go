@@ -41,6 +41,16 @@ type JWTSettingS struct {
 	Expire time.Duration
 }
 
+type EmailSettingS struct {
+	Host     string
+	Port     int
+	UserName string
+	Password string
+	IsSSL    bool
+	From     string
+	To       []string
+}
+
 // 将配置文件中的部分 读取入结构体中
 func (s *Setting) ReadSection(k string, v interface{}) error {
 	return s.vp.UnmarshalKey(k, v)
