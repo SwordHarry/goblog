@@ -10,6 +10,7 @@ require (
 	github.com/go-playground/universal-translator v0.17.0
 	github.com/go-playground/validator/v10 v10.2.0
 	github.com/jinzhu/gorm v1.9.15
+	github.com/juju/ratelimit v1.0.1 // indirect
 	github.com/spf13/viper v1.7.0
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.7

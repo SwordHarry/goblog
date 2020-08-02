@@ -75,3 +75,6 @@ payload 中不能明文存储重要信息，因为可以进行 base64 的解码
 /internal/middleware/recovery.go
 ### 12. 邮件报警处理
 /pkg/email
+
+### 13. 限流控制
+/pkg/limiter
