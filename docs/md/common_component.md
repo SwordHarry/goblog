@@ -78,3 +78,12 @@ payload 中不能明文存储重要信息，因为可以进行 base64 的解码
 
 ### 13. 限流控制
 /pkg/limiter
+/internal/middleware/limiter
+
+### 14. 统一超时处理
+/internal/middleware/context_timeout
+### 15. 链路追踪
+OpenTracing 规范
+
+/pkg/tracer
+/internal/middleware/tracer

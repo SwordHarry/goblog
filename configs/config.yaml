@@ -19,6 +19,7 @@ App:
     - .jpg
     - .jpeg
     - .png
+  DefaultContextTimeout: 20 # 请求超时处理
 #数据库配置
 Database:
   DBType: mysql

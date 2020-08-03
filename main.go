@@ -7,6 +7,7 @@ import (
 	"goblog/internal/routers"
 	"goblog/pkg/logger"
 	"goblog/pkg/setting"
+	"goblog/pkg/tracer"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
 	"net/http"
@@ -40,12 +41,13 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = setupDBEngine()
-	if err != nil {
+	if err = setupDBEngine(); err != nil {
 		log.Fatal(err)
 	}
-	err = setupLogger()
-	if err != nil {
+	if err = setupLogger(); err != nil {
+		log.Fatal(err)
+	}
+	if err = setupTracer(); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -73,6 +75,7 @@ func setupSetting() error {
 	global.JWTSetting.Expire *= time.Second
 	global.ServerSetting.ReadTimeout *= time.Second
 	global.ServerSetting.WriteTimeout *= time.Second
+	global.AppSetting.DefaultContextTimeout *= time.Second
 	return nil
 }
 
@@ -89,5 +92,16 @@ func setupLogger() error {
 		MaxAge:    10,
 		LocalTime: true,
 	}, "", log.LstdFlags).WithCaller(2)
+	return nil
+}
+
+// 初始化链路追踪器
+func setupTracer() error {
+	jaegerTracer, _, err := tracer.NewJaegerTracer("go-blog", "127.0.0.1:6831")
+	if err != nil {
+		return err
+	}
+
+	global.Tracer = jaegerTracer
 	return nil
 }

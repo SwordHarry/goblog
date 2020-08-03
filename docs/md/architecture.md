@@ -7,6 +7,13 @@ dao：封装调用 model
 model：数据库 model
 ----
 middleware：中间件
+- access_log：访问日志
+- app_info：程序信息
+- context_timeout：请求超时
+- jwt：鉴权
+- limiter：限流
+- recovery：故障恢复和邮件报警
+- translations：国际化
 
 
 pkg：内容为通用组件内容，贯穿整个project，如：
