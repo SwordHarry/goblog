@@ -37,7 +37,7 @@ func AccessLog() gin.HandlerFunc {
 			"response": bodyWriter.body.String(),    // 请求结果
 		}
 		global.Logger.WithFields(fields).
-			Infof("access log: method: %s, status_code: %d, begin_time: %d, end_time: %d",
+			Infof(c, "access log: method: %s, status_code: %d, begin_time: %d, end_time: %d",
 				c.Request.Method, bodyWriter.Status(), beginTime, endTime)
 		// 控制台打印
 		fmt.Printf("access log: method: %s, status_code: %d, begin_time: %d, end_time: %d",

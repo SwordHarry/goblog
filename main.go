@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"github.com/gin-gonic/gin"
 	"goblog/global"
 	"goblog/internal/model"
@@ -11,7 +12,14 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
 	"net/http"
+	"strings"
 	"time"
+)
+
+var (
+	port    string
+	runMode string
+	config  string
 )
 
 // @title 博客系统
@@ -37,6 +45,8 @@ func main() {
 
 // 配置初始化
 func init() {
+	// 先读取命令行参数
+	_ = setupFlag()
 	err := setupSetting()
 	if err != nil {
 		log.Fatal(err)
@@ -53,7 +63,7 @@ func init() {
 }
 
 func setupSetting() error {
-	newSetting, err := setting.NewSetting()
+	newSetting, err := setting.NewSetting(strings.Split(config, ",")...)
 	if err != nil {
 		return err
 	}
@@ -72,10 +82,19 @@ func setupSetting() error {
 	if err = newSetting.ReadSection("Email", &global.EmailSetting); err != nil {
 		return err
 	}
+	if err = newSetting.ReadSection("Tracer", &global.TracerSetting); err != nil {
+		return err
+	}
 	global.JWTSetting.Expire *= time.Second
 	global.ServerSetting.ReadTimeout *= time.Second
 	global.ServerSetting.WriteTimeout *= time.Second
 	global.AppSetting.DefaultContextTimeout *= time.Second
+	if port != "" {
+		global.ServerSetting.HttpPort = port
+	}
+	if runMode != "" {
+		global.ServerSetting.RunMode = runMode
+	}
 	return nil
 }
 
@@ -97,11 +116,20 @@ func setupLogger() error {
 
 // 初始化链路追踪器
 func setupTracer() error {
-	jaegerTracer, _, err := tracer.NewJaegerTracer("go-blog", "127.0.0.1:6831")
+	jaegerTracer, _, err := tracer.NewJaegerTracer(global.TracerSetting.ServiceName, global.TracerSetting.HostPort)
 	if err != nil {
 		return err
 	}
 
 	global.Tracer = jaegerTracer
+	return nil
+}
+
+// 初始化命令行配置
+func setupFlag() error {
+	flag.StringVar(&port, "port", "", "启动端口")
+	flag.StringVar(&runMode, "mode", "", "启动模式")
+	flag.StringVar(&config, "config", "configs/", "指定要使用的配置文件路径")
+	flag.Parse()
 	return nil
 }

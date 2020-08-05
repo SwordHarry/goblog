@@ -47,3 +47,7 @@ Email:
   From: 2398960068@qq.com
   To:
     - 2398960068@qq.com
+# jaeger tracer 配置
+Tracer:
+  ServiceName: go-blog
+  HostPort: 127.0.0.1:6831

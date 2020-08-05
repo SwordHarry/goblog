@@ -84,6 +84,12 @@ payload 中不能明文存储重要信息，因为可以进行 base64 的解码
 /internal/middleware/context_timeout
 ### 15. 链路追踪
 OpenTracing 规范
+1. 请求追踪
 
 /pkg/tracer
+
 /internal/middleware/tracer
+2. SQL 追踪
+
+### 16. 应用配置问题
+- go run 命令和 go build 命令是不同的，一个是在临时目录下执行，另一个在编译后的目录下执行，路径处理方式不同

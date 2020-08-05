@@ -1,0 +1,1 @@
+go run ../main.go -port=8000 -mode=release -config=configs/
