@@ -1,7 +1,7 @@
 # 服务配置
 Server:
   RunMode: debug # 设置gin 的运行模式
-  HttpPort: 8000 # 默认的 HTTP 监听端口
+  HttpPort: 8080 # 默认的 HTTP 监听端口
   ReadTimeout: 60 # 允许读取和写入的最大持续时间
   WriteTimeout: 60
 #应用配置

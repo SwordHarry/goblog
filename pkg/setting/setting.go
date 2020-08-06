@@ -1,6 +1,10 @@
 package setting
 
-import "github.com/spf13/viper"
+import (
+	"github.com/fsnotify/fsnotify"
+	"github.com/spf13/viper"
+	"log"
+)
 
 // setting 程序配置组件
 type Setting struct {
@@ -22,5 +26,18 @@ func NewSetting(configs ...string) (*Setting, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Setting{vp}, nil
+	s := &Setting{vp}
+	s.WatchSettingChange()
+	return s, nil
+}
+
+// 监听文件变化，配置热更新
+func (s *Setting) WatchSettingChange() {
+	go func() {
+		s.vp.WatchConfig()
+		s.vp.OnConfigChange(func(in fsnotify.Event) {
+			log.Println("配置文件热更新", in.Name)
+			_ = s.ReloadAllSection()
+		})
+	}()
 }
