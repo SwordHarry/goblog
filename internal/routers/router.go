@@ -72,6 +72,7 @@ func NewRouter() *gin.Engine {
 		apiV1.DELETE("/articles/:id", article.Delete)
 		apiV1.PUT("/articles/:id", article.Update)
 		apiV1.GET("/articles/:id", article.Get)
+		apiV1.GET("/articles_tag", article.ListByTagID)
 		apiV1.GET("/articles", article.List)
 		// upload
 		apiV1.POST("/upload", api.UploadFile)

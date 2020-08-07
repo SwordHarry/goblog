@@ -25,7 +25,7 @@ func (a *ArticleTag) GetByAID(db *gorm.DB) (*ArticleTag, error) {
 // select articleTag on tag_id = ? and is_del = ?
 func (a *ArticleTag) ListByTID(db *gorm.DB) ([]*ArticleTag, error) {
 	var articleTags []*ArticleTag
-	if err := db.Where("tag_id = ? and is_del = ?", a.TagID, 0).Find(articleTags).Error; err != nil {
+	if err := db.Where("tag_id = ? and is_del = ?", a.TagID, 0).Find(&articleTags).Error; err != nil {
 		return nil, err
 	}
 	return articleTags, nil
@@ -34,7 +34,7 @@ func (a *ArticleTag) ListByTID(db *gorm.DB) ([]*ArticleTag, error) {
 // select articleTags on article_id in ? and is_del = ?
 func (a *ArticleTag) ListByAIDs(db *gorm.DB, articleIDs []uint32) ([]*ArticleTag, error) {
 	var articleTags []*ArticleTag
-	err := db.Where("article_id in (?) and is_del = ?", articleIDs, 0).Find(articleTags).Error
+	err := db.Where("article_id in (?) and is_del = ?", articleIDs, 0).Find(&articleTags).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}

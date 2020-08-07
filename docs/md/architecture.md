@@ -27,6 +27,10 @@ pkg：内容为通用组件内容，贯穿整个project，如：
 - setting：project 配置<br/>配置读入 global 中
 - upload：文件上传；从安全角度上说，文件资源不应当与应用资源放在一起
 - util：工具库；md5序列化
+- email：邮件服务
+- limiter：流量限流
+- tracer：链路追踪
+
 
 configs：yaml 配置文件<br>
 scripts：存放 sql 等脚本<br>

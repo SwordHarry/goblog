@@ -43,10 +43,40 @@ func (a *Article) Get(c *gin.Context) {
 	return
 }
 
-// @Summary 获取多个文章
+// @Summary 通过 tagID 获取多个文章
 // @Produce json
 // @Param name query string false "文章名称"
 // @Param tag_id query int false "标签ID"
+// @Param state query int false "状态"
+// @Param page query int false "页码"
+// @Param page_size query int false "每页数量"
+// @Success 200 {object} model.ArticleSwagger "成功"
+// @Failure 400 {object} errcode.Error "请求错误"
+// @Failure 500 {object} errcode.Error "内部错误"
+// @Router /api/v1/articles_tag [get]
+func (a *Article) ListByTagID(c *gin.Context) {
+	param := service.ArticleListByTIDRequest{}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		api.InvalidForBind(c, response, errs)
+		return
+	}
+	svc := service.New(c.Request.Context())
+	pager := app.Pager{Page: app.GetPage(c), PageSize: app.GetPageSize(c)}
+	articles, totalRows, err := svc.GetArticleListByTagID(&param, &pager)
+	if err != nil {
+		global.Logger.Errorf(c, "svc.GetArticleListByTagID err: %v", err)
+		response.ToErrorResponse(errcode.ErrorGetArticlesFail)
+		return
+	}
+	response.ToResponseList(articles, totalRows)
+	return
+}
+
+// @Summary 获取多个文章
+// @Produce json
+// @Param name query string false "文章名称"
 // @Param state query int false "状态"
 // @Param page query int false "页码"
 // @Param page_size query int false "每页数量"
@@ -64,14 +94,13 @@ func (a *Article) List(c *gin.Context) {
 	}
 	svc := service.New(c.Request.Context())
 	pager := app.Pager{Page: app.GetPage(c), PageSize: app.GetPageSize(c)}
-	articles, totalRows, err := svc.GetArticleList(&param, &pager)
+	articles, count, err := svc.GetArticleList(&param, &pager)
 	if err != nil {
 		global.Logger.Errorf(c, "svc.GetArticleList err: %v", err)
 		response.ToErrorResponse(errcode.ErrorGetArticlesFail)
 		return
 	}
-	response.ToResponseList(articles, totalRows)
-	return
+	response.ToResponseList(articles, count)
 }
 
 // @Summary 创建文章

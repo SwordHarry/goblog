@@ -70,3 +70,13 @@ func (d *Dao) GetArticleListByTagID(id uint32, state uint8, page, pageSize int) 
 	article := model.Article{State: state}
 	return article.ListByTagID(d.engine, id, app.GetPageOffset(page, pageSize), pageSize)
 }
+
+func (d *Dao) ListArticles(state uint8, page, pageSize int) ([]*model.Article, error) {
+	article := model.Article{State: state}
+	return article.ListArticles(d.engine, app.GetPageOffset(page, pageSize), pageSize)
+}
+
+func (d *Dao) CountArticles(state uint8) (int, error) {
+	article := model.Article{State: state}
+	return article.CountArticles(d.engine, state)
+}

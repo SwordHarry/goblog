@@ -11,6 +11,10 @@ type ArticleRequest struct {
 }
 
 type ArticleListRequest struct {
+	State uint8 `form:"state,default=1" json:"state,default=1" binding:"oneof=0 1"`
+}
+
+type ArticleListByTIDRequest struct {
 	TagID uint32 `form:"tag_id" json:"tag_id" binding:"gte=1"`
 	State uint8  `form:"state,default=1" json:"state,default=1" binding:"oneof=0 1"`
 }
@@ -87,8 +91,32 @@ func (svc *Service) GetArticle(param *ArticleRequest) (*Article, error) {
 	}, nil
 }
 
-// 获取文章列表
+// 分页：获取文章列表
 func (svc *Service) GetArticleList(param *ArticleListRequest, pager *app.Pager) ([]*Article, int, error) {
+	totalRow, err := svc.dao.CountArticles(param.State)
+	if err != nil {
+		return nil, 0, err
+	}
+	var result []*Article
+	modelArticles, err := svc.dao.ListArticles(param.State, pager.Page, pager.PageSize)
+	if err != nil {
+		return nil, 0, err
+	}
+	for _, article := range modelArticles {
+		result = append(result, &Article{
+			ID:            article.ID,
+			Title:         article.Title,
+			Desc:          article.Desc,
+			Content:       article.Content,
+			CoverImageUrl: article.CoverImageUrl,
+			State:         article.State,
+		})
+	}
+	return result, totalRow, nil
+}
+
+// 通过 tagId 获取文章列表
+func (svc *Service) GetArticleListByTagID(param *ArticleListByTIDRequest, pager *app.Pager) ([]*Article, int, error) {
 	articleCount, err := svc.dao.CountArticleListByTagID(param.TagID, param.State)
 	if err != nil {
 		return nil, 0, err

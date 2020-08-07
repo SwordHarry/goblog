@@ -93,6 +93,7 @@ OpenTracing 规范
 
 ### 16. 应用配置问题
 - go run 命令和 go build 命令是不同的，一个是在临时目录下执行，另一个在编译后的目录下执行，路径处理方式不同
+- 通过命令行flag包进行初始化配置载入
 ### 17. 配置热更新
 github.com/fsnotify/fsnotify
 ### 18. 设置编译信息

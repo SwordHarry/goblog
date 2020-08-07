@@ -46,8 +46,28 @@ func (a *Article) Get(db *gorm.DB) (*Article, error) {
 	return article, nil
 }
 
+// list articles with pagination
+func (a *Article) ListArticles(db *gorm.DB, pageOffset, pageSize int) ([]*Article, error) {
+	var result []*Article
+	if pageOffset >= 0 && pageSize > 0 {
+		db = db.Offset(pageOffset).Limit(pageSize)
+	}
+	// TODO: have a bug
+	err := db.Where("state = ?", a.State).Find(&result).Error
+	if err != nil {
+		return result, err
+	}
+	return result, nil
+}
+
 func (a *Article) Delete(db *gorm.DB) error {
 	return db.Where("id = ? and is_del = ?", a.ID, 0).Delete(a).Error
+}
+
+func (a *Article) CountArticles(db *gorm.DB, state uint8) (int, error) {
+	var count int
+	err := db.Table(a.TableName()).Where("state = ?", state).Count(&count).Error
+	return count, err
 }
 
 // 关联查询
@@ -61,6 +81,7 @@ type ArticleRow struct {
 	Content       string
 }
 
+// list articles by tag id
 func (a *Article) ListByTagID(db *gorm.DB, tagID uint32, pageOffset, pageSize int) ([]*ArticleRow, error) {
 	fields := []string{
 		"ar.id as article_id",
@@ -114,10 +135,9 @@ func (a *Article) CountByTagID(db *gorm.DB, tagID uint32) (int, error) {
 	var count int
 	articleTag := new(ArticleTag)
 	tag := new(Tag)
-	article := new(Article)
 	err := db.Table(articleTag.TableName()+" as at").
 		Joins("left join `"+tag.TableName()+"` as t on at.tag_id= t.id").
-		Joins("left join `"+article.TableName()+"` as ar on at.article_id = ar.id").
+		Joins("left join `"+a.TableName()+"` as ar on at.article_id = ar.id").
 		Where("at.`tag_id` = ? and ar.state = ? and ar.is_del = ?", tagID, a.State, 0).
 		Count(&count).Error
 	if err != nil {
