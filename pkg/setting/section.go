@@ -14,11 +14,16 @@ type AppSettingS struct {
 	DefaultPageSize       int
 	MaxPageSize           int
 	UploadImageMaxSize    int
+	UploadMDMaxSize       int
 	LogSavePath           string
 	LogFileName           string
 	LogFileExt            string
+	UploadImageSavePath   string
+	UploadImageServerUrl  string
+	UploadMDSavePath      string
+	UploadMDServerUrl     string
 	UploadSavePath        string
-	UploadServerUrl       string
+	UploadMDAllowExts     []string
 	UploadImageAllowExts  []string
 	DefaultContextTimeout time.Duration
 }

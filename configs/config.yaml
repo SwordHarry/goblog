@@ -11,14 +11,21 @@ App:
   LogSavePath: storage/logs # 默认的应用日志存储路径
   LogFileName: app
   LogFileExt: .log
+  UploadSavePath: storage/uploads
   #  上传图片配置
-  UploadSavePath: storage/uploads # 上传文件的最终保存目录
-  UploadServerUrl: http://127.0.0.1:8000/static # 上传文件后用于展示的文件服务地址
+  UploadImageSavePath: storage/uploads/image # 上传文件的最终保存目录
+  UploadImageServerUrl: http://127.0.0.1:8000/static/image # 上传文件后用于展示的文件服务地址
   UploadImageMaxSize: 5 # MB 最大空间大小
   UploadImageAllowExts: # 文件名后缀
     - .jpg
     - .jpeg
     - .png
+  # 上传 markdown 文件配置
+  UploadMDSavePath: storage/uploads/md
+  UploadMDServerUrl: http://127.0.0.1:8000/static/md
+  UploadMDAllowExts:
+    - .md
+  UploadMDMaxSize: 10 # MB 最大空间大小
   DefaultContextTimeout: 20 # 请求超时处理
 #数据库配置
 Database:

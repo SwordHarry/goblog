@@ -8,13 +8,17 @@ import (
 	"mime/multipart"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 )
 
 // 文件上传服务
 type FileType int
 
-const TypeImage FileType = iota + 1
+const (
+	TypeImage FileType = iota + 1
+	TypeMd
+)
 
 func GetFileName(name string) string {
 	ext := GetFileExt(name)
@@ -27,7 +31,13 @@ func GetFileExt(name string) string {
 	return path.Ext(name)
 }
 
-func GetSavePath() string {
+func GetSavePath(fileType FileType) string {
+	switch fileType {
+	case TypeImage:
+		return global.AppSetting.UploadImageSavePath
+	case TypeMd:
+		return global.AppSetting.UploadMDSavePath
+	}
 	return global.AppSetting.UploadSavePath
 }
 
@@ -50,6 +60,12 @@ func CheckContainExt(t FileType, name string) bool {
 				return true
 			}
 		}
+	case TypeMd:
+		for _, allowExt := range global.AppSetting.UploadMDAllowExts {
+			if strings.ToUpper(allowExt) == strings.ToUpper(ext) {
+				return true
+			}
+		}
 	}
 	return false
 }
@@ -61,6 +77,10 @@ func CheckMaxSize(t FileType, f multipart.File) bool {
 	switch t {
 	case TypeImage:
 		if size >= global.AppSetting.UploadImageMaxSize*1024*1024 {
+			return true
+		}
+	case TypeMd:
+		if size >= global.AppSetting.UploadMDMaxSize*1024*1024 {
 			return true
 		}
 	}
@@ -93,4 +113,14 @@ func SaveFile(file *multipart.FileHeader, dst string) error {
 	defer out.Close()
 	_, err = io.Copy(out, src)
 	return err
+}
+
+func GetAccessUrl(fileType FileType, fileName string) string {
+	switch fileType {
+	case TypeImage:
+		return filepath.Join(global.AppSetting.UploadImageServerUrl, fileName)
+	case TypeMd:
+		return filepath.Join(global.AppSetting.UploadMDServerUrl, fileName)
+	}
+	return ""
 }

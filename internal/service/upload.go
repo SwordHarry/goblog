@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"goblog/global"
 	"goblog/pkg/upload"
 	"mime/multipart"
 	"os"
@@ -17,12 +16,12 @@ type FileInfo struct {
 func (svc *Service) UploadFile(fileType upload.FileType, file multipart.File, fileHeader *multipart.FileHeader) (*FileInfo, error) {
 	// 获取文件基本信息
 	fileName := upload.GetFileName(fileHeader.Filename)
-	uploadSavePath := upload.GetSavePath()
-	dst := filepath.Join(uploadSavePath, fileName)
 	// 对文件进行检查
 	if !upload.CheckContainExt(fileType, fileName) {
 		return nil, errors.New("file suffix is not supported")
 	}
+	uploadSavePath := upload.GetSavePath(fileType)
+	dst := filepath.Join(uploadSavePath, fileName)
 	if upload.CheckSavePath(uploadSavePath) {
 		if err := upload.CreateSavePath(uploadSavePath, os.ModePerm); err != nil {
 			return nil, errors.New("failed to create save directory")
@@ -38,6 +37,6 @@ func (svc *Service) UploadFile(fileType upload.FileType, file multipart.File, fi
 		return nil, err
 	}
 
-	accessUrl := filepath.Join(global.AppSetting.UploadServerUrl, fileName)
+	accessUrl := upload.GetAccessUrl(fileType, fileName)
 	return &FileInfo{Name: fileName, AccessUrl: accessUrl}, nil
 }
