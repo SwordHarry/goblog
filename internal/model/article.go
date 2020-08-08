@@ -36,7 +36,7 @@ func (a *Article) Update(db *gorm.DB, values interface{}) error {
 }
 
 func (a *Article) Get(db *gorm.DB) (*Article, error) {
-	var article *Article
+	article := new(Article)
 	db = db.Where("id = ? and state = ? and is_del = ?", a.ID, a.State, 0)
 	// first 方法用于查询单条记录
 	err := db.First(article).Error
@@ -52,7 +52,6 @@ func (a *Article) ListArticles(db *gorm.DB, pageOffset, pageSize int) ([]*Articl
 	if pageOffset >= 0 && pageSize > 0 {
 		db = db.Offset(pageOffset).Limit(pageSize)
 	}
-	// TODO: have a bug
 	err := db.Where("state = ?", a.State).Find(&result).Error
 	if err != nil {
 		return result, err

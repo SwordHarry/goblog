@@ -33,18 +33,6 @@ var doc = `{
                 "summary": "获取多个文章",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "文章名称",
-                        "name": "name",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "标签ID",
-                        "name": "tag_id",
-                        "in": "query"
-                    },
-                    {
                         "type": "integer",
                         "description": "状态",
                         "name": "state",
@@ -91,12 +79,15 @@ var doc = `{
                 "summary": "创建文章",
                 "parameters": [
                     {
-                        "description": "标签ID",
-                        "name": "tag_id",
+                        "description": "标签ID列表",
+                        "name": "tag_ids",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
                         }
                     },
                     {
@@ -112,6 +103,7 @@ var doc = `{
                         "description": "文章简述",
                         "name": "desc",
                         "in": "body",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -217,8 +209,8 @@ var doc = `{
                 "summary": "更新文章",
                 "parameters": [
                     {
-                        "description": "标签ID",
-                        "name": "tag_id",
+                        "description": "文章ID",
+                        "name": "article_id",
                         "in": "body",
                         "schema": {
                             "type": "string"
@@ -296,7 +288,7 @@ var doc = `{
                     {
                         "type": "integer",
                         "description": "文章ID",
-                        "name": "id",
+                        "name": "article_id",
                         "in": "path",
                         "required": true
                     }
@@ -306,6 +298,66 @@ var doc = `{
                         "description": "成功",
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "请求错误",
+                        "schema": {
+                            "$ref": "#/definitions/errcode.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/errcode.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/articles_tag": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "通过 tagID 获取多个文章",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "文章名称",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "标签ID",
+                        "name": "tag_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "状态",
+                        "name": "state",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "每页数量",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/model.ArticleSwagger"
                         }
                     },
                     "400": {
@@ -418,6 +470,7 @@ var doc = `{
                         "description": "创建者",
                         "name": "created_by",
                         "in": "body",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }

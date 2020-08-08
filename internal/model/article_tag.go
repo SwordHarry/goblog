@@ -13,13 +13,13 @@ func (a *ArticleTag) TableName() string {
 }
 
 // select articleTag on article_id = ? and is_del = ?
-func (a *ArticleTag) GetByAID(db *gorm.DB) (*ArticleTag, error) {
-	var articleTag *ArticleTag
-	err := db.Where("article_id = ? and is_del = ?", a.ArticleID, 0).First(articleTag).Error
+func (a *ArticleTag) GetByAID(db *gorm.DB) ([]*ArticleTag, error) {
+	var tagList []*ArticleTag
+	err := db.Where("article_id = ? and is_del = ?", a.ArticleID, 0).Find(&tagList).Error
 	if err != nil {
 		return nil, err
 	}
-	return articleTag, nil
+	return tagList, nil
 }
 
 // select articleTag on tag_id = ? and is_del = ?
@@ -49,8 +49,12 @@ func (a *ArticleTag) UpdateOne(db *gorm.DB, values interface{}) error {
 	return db.Model(a).Where("article_id = ? and is_del = ?", a.ArticleID, 0).Limit(1).Updates(values).Error
 }
 
-func (a *ArticleTag) Delete(db *gorm.DB) error {
-	return db.Where("id = ? and is_del = ?", a.ID, 0).Delete(a).Error
+func (a *ArticleTag) DeleteByAID(db *gorm.DB) error {
+	return db.Where("article_id = ? and is_del = ?", a.ArticleID, 0).Delete(a).Error
+}
+
+func (a *ArticleTag) DeleteByTID(db *gorm.DB) error {
+	return db.Where("tag_id = ? and is_del = ?", a.TagID, 0).Delete(a).Error
 }
 
 func (a *ArticleTag) DeleteOne(db *gorm.DB) error {

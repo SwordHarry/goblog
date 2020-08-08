@@ -95,14 +95,6 @@ paths:
   /api/v1/articles:
     get:
       parameters:
-      - description: 文章名称
-        in: query
-        name: name
-        type: string
-      - description: 标签ID
-        in: query
-        name: tag_id
-        type: integer
       - description: 状态
         in: query
         name: state
@@ -133,12 +125,14 @@ paths:
       summary: 获取多个文章
     post:
       parameters:
-      - description: 标签ID
+      - description: 标签ID列表
         in: body
-        name: tag_id
+        name: tag_ids
         required: true
         schema:
-          type: string
+          items:
+            type: integer
+          type: array
       - description: 文章标题
         in: body
         name: title
@@ -148,6 +142,7 @@ paths:
       - description: 文章简述
         in: body
         name: desc
+        required: true
         schema:
           type: string
       - description: 封面图片地址
@@ -194,7 +189,7 @@ paths:
       parameters:
       - description: 文章ID
         in: path
-        name: id
+        name: article_id
         required: true
         type: integer
       produces:
@@ -238,9 +233,9 @@ paths:
       summary: 获取单个文章
     put:
       parameters:
-      - description: 标签ID
+      - description: 文章ID
         in: body
-        name: tag_id
+        name: article_id
         schema:
           type: string
       - description: 文章标题
@@ -285,6 +280,45 @@ paths:
           schema:
             $ref: '#/definitions/errcode.Error'
       summary: 更新文章
+  /api/v1/articles_tag:
+    get:
+      parameters:
+      - description: 文章名称
+        in: query
+        name: name
+        type: string
+      - description: 标签ID
+        in: query
+        name: tag_id
+        type: integer
+      - description: 状态
+        in: query
+        name: state
+        type: integer
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.ArticleSwagger'
+        "400":
+          description: 请求错误
+          schema:
+            $ref: '#/definitions/errcode.Error'
+        "500":
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/errcode.Error'
+      summary: 通过 tagID 获取多个文章
   /api/v1/tags:
     get:
       parameters:
@@ -349,6 +383,7 @@ paths:
         maxLength: 100
         minLength: 3
         name: created_by
+        required: true
         schema:
           type: string
       produces:

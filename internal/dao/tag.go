@@ -5,10 +5,14 @@ import (
 	"goblog/pkg/app"
 )
 
-// 因为 tag 只有 name 和 state 两个属性，故不尽兴 dao 层的结构体封装
+// 因为 tag 只有 name 和 state 两个属性，故不进行 dao 层的结构体封装
 func (d *Dao) GetTag(id uint32, state uint8) (*model.Tag, error) {
 	tag := &model.Tag{Model: &model.Model{ID: id}, State: state}
 	return tag.Get(d.engine)
+}
+func (d *Dao) GetTagByName(name string, state uint8) (*model.Tag, error) {
+	tag := &model.Tag{Name: name, State: state}
+	return tag.GetByName(d.engine)
 }
 func (d *Dao) CountTag(name string, state uint8) (int, error) {
 	tag := model.Tag{Name: name, State: state}

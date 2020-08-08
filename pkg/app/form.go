@@ -35,6 +35,7 @@ func (v ValidErrors) Errors() []string {
 func BindAndValid(c *gin.Context, v interface{}) (bool, ValidErrors) {
 	var errs ValidErrors
 	// shouldBind 将入参和结构体参数进行绑定
+	// 注意 content-type
 	err := c.ShouldBind(v)
 	// 错误信息国际化处理
 	if err != nil {

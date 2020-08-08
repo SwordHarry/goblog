@@ -55,6 +55,7 @@ func (a *Article) Get(c *gin.Context) {
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/articles_tag [get]
 func (a *Article) ListByTagID(c *gin.Context) {
+	// TODO: 如何支持多 tagID 的交集搜索
 	param := service.ArticleListByTIDRequest{}
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
@@ -76,7 +77,6 @@ func (a *Article) ListByTagID(c *gin.Context) {
 
 // @Summary 获取多个文章
 // @Produce json
-// @Param name query string false "文章名称"
 // @Param state query int false "状态"
 // @Param page query int false "页码"
 // @Param page_size query int false "每页数量"
@@ -105,9 +105,9 @@ func (a *Article) List(c *gin.Context) {
 
 // @Summary 创建文章
 // @Produce json
-// @Param tag_id body string true "标签ID"
+// @Param tag_ids body []int true "标签ID列表"
 // @Param title body string true "文章标题"
-// @Param desc body string false "文章简述"
+// @Param desc body string true "文章简述"
 // @Param cover_image_url body string true "封面图片地址"
 // @Param content body string true "文章内容"
 // @Param created_by body int true "创建者"
@@ -138,7 +138,7 @@ func (a *Article) Create(c *gin.Context) {
 
 // @Summary 更新文章
 // @Produce json
-// @Param tag_id body string false "标签ID"
+// @Param article_id body string false "文章ID"
 // @Param title body string false "文章标题"
 // @Param desc body string false "文章简述"
 // @Param cover_image_url body string false "封面图片地址"
@@ -149,7 +149,7 @@ func (a *Article) Create(c *gin.Context) {
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/articles/{id} [put]
 func (a *Article) Update(c *gin.Context) {
-	param := service.UpdateArticleRequest{ID: convert.StrTo(c.Param("id")).MustUint32()}
+	param := service.UpdateArticleRequest{ArticleID: convert.StrTo(c.Param("id")).MustUint32()}
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {
@@ -169,13 +169,13 @@ func (a *Article) Update(c *gin.Context) {
 
 // @Summary 删除文章
 // @Produce  json
-// @Param id path int true "文章ID"
+// @Param article_id path int true "文章ID"
 // @Success 200 {string} string "成功"
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/articles/{id} [delete]
 func (a *Article) Delete(c *gin.Context) {
-	param := service.DeleteArticleRequest{ID: convert.StrTo(c.Param("id")).MustUint32()}
+	param := service.DeleteArticleRequest{ArticleID: convert.StrTo(c.Param("id")).MustUint32()}
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {

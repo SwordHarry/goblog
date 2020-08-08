@@ -4,7 +4,7 @@ import "goblog/internal/model"
 
 // dao for article_tag
 // get
-func (d *Dao) GetArticleTagByAID(articleID uint32) (*model.ArticleTag, error) {
+func (d *Dao) GetArticleTagByAID(articleID uint32) ([]*model.ArticleTag, error) {
 	articleTag := &model.ArticleTag{ArticleID: articleID}
 	return articleTag.GetByAID(d.engine)
 }
@@ -43,7 +43,12 @@ func (d *Dao) UpdateArticleTag(articleID, tagID uint32, modifiedBy string) error
 }
 
 // delete
-func (d *Dao) DeleteArticleTag(articleID uint32) error {
+func (d *Dao) DeleteArticleTagByAID(articleID uint32) error {
 	articleTag := model.ArticleTag{ArticleID: articleID}
-	return articleTag.Delete(d.engine)
+	return articleTag.DeleteByAID(d.engine)
+}
+
+func (d *Dao) DeleteArticleTagByTID(tagID uint32) error {
+	articleTag := model.ArticleTag{TagID: tagID}
+	return articleTag.DeleteByTID(d.engine)
 }

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/jinzhu/gorm"
 	"goblog/internal/model"
 	"goblog/pkg/app"
 )
@@ -42,6 +43,14 @@ func (svc *Service) GetTagList(param *TagListRequest, pager *app.Pager) ([]*mode
 	return svc.dao.GetTagList(param.Name, param.State, pager.Page, pager.PageSize)
 }
 
+func (svc *Service) GetTagByName(param *CreateTagRequest) (*model.Tag, error) {
+	t, err := svc.dao.GetTagByName(param.Name, param.State)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return t, nil
+}
+
 func (svc *Service) CreateTag(param *CreateTagRequest) error {
 	return svc.dao.CreateTag(param.Name, param.State, param.CreatedBy)
 }
@@ -51,5 +60,9 @@ func (svc *Service) UpdateTag(param *UpdateTagRequest) error {
 }
 
 func (svc *Service) DeleteTag(param *DeleteTagRequest) error {
+	err := svc.dao.DeleteArticleTagByTID(param.ID)
+	if err != nil {
+		return err
+	}
 	return svc.dao.DeleteTag(param.ID)
 }

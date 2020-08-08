@@ -30,9 +30,15 @@ type TagSwagger struct {
 // delete 删除
 // count 统计记录数
 
-func (t *Tag) Get(db *gorm.DB) (tag *Tag, err error) {
-	err = db.Where("id = ? and is_del = ? and state = ?", t.ID, 0, t.State).First(tag).Error
-	return
+func (t *Tag) Get(db *gorm.DB) (*Tag, error) {
+	tag := new(Tag)
+	err := db.Where("id = ? and is_del = ? and state = ?", t.ID, 0, t.State).First(tag).Error
+	return tag, err
+}
+func (t *Tag) GetByName(db *gorm.DB) (*Tag, error) {
+	tag := new(Tag)
+	err := db.Where("name = ? and is_del = ? and state = ?", t.Name, 0, t.State).First(tag).Error
+	return tag, err
 }
 
 // count tag

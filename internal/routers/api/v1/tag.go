@@ -63,7 +63,7 @@ func (t *Tag) List(c *gin.Context) {
 // @Produce  json
 // @Param name body string true "标签名称" minlength(3) maxlength(100)
 // @Param state body int false "状态" Enums(0, 1) default(1)
-// @Param created_by body string false "创建者" minlength(3) maxlength(100)
+// @Param created_by body string true "创建者" minlength(3) maxlength(100)
 // @Success 200 {object} model.Tag "成功"
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
@@ -77,7 +77,18 @@ func (t *Tag) Create(c *gin.Context) {
 		return
 	}
 	svc := service.New(c.Request.Context())
-	err := svc.CreateTag(&param)
+	existedTag, err := svc.GetTagByName(&param)
+	if err != nil {
+		global.Logger.Errorf(c, "svc.GetTagByName err: %v", err)
+		response.ToErrorResponse(errcode.ErrorCreateTagFail)
+		return
+	}
+	// 标签已存在
+	if existedTag != nil && existedTag.ID > 0 {
+		response.ToErrorResponse(errcode.ErrorCreateTagExistedFail)
+		return
+	}
+	err = svc.CreateTag(&param)
 	if err != nil {
 		global.Logger.Errorf(c, "svc.CreateTag err: %v", err)
 		response.ToErrorResponse(errcode.ErrorCreateTagFail)
