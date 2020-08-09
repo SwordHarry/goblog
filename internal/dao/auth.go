@@ -1,9 +1,11 @@
 package dao
 
-import "goblog/internal/model"
+type Auth struct {
+	*Common
+	AppKey    string `json:"app_key"`
+	AppSecret string `json:"app_secret"`
+}
 
-// 获取认证信息
-func (d *Dao) GetAuth(appKey, appSecret string) (*model.Auth, error) {
-	auth := model.Auth{AppKey: appKey, AppSecret: appSecret}
-	return auth.Get(d.engine)
+func (a *Auth) TableName() string {
+	return "blog_auth"
 }

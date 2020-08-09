@@ -1,21 +1,14 @@
 package model
 
-import "github.com/jinzhu/gorm"
-
-type ArticleTag struct {
-	*Model
-	TagID     uint32 `json:"tag_id"`
-	ArticleID uint32 `json:"article_id"`
-}
-
-func (a *ArticleTag) TableName() string {
-	return "blog_article_tag"
-}
+import (
+	"github.com/jinzhu/gorm"
+	"goblog/internal/dao"
+)
 
 // select articleTag on article_id = ? and is_del = ?
-func (a *ArticleTag) GetByAID(db *gorm.DB) ([]*ArticleTag, error) {
-	var tagList []*ArticleTag
-	err := db.Where("article_id = ? and is_del = ?", a.ArticleID, 0).Find(&tagList).Error
+func (m *Model) GetArticleTagByAID(articleID uint32) ([]*dao.ArticleTag, error) {
+	var tagList []*dao.ArticleTag
+	err := m.engine.Where("article_id = ? and is_del = ?", articleID, 0).Find(&tagList).Error
 	if err != nil {
 		return nil, err
 	}
@@ -23,40 +16,57 @@ func (a *ArticleTag) GetByAID(db *gorm.DB) ([]*ArticleTag, error) {
 }
 
 // select articleTag on tag_id = ? and is_del = ?
-func (a *ArticleTag) ListByTID(db *gorm.DB) ([]*ArticleTag, error) {
-	var articleTags []*ArticleTag
-	if err := db.Where("tag_id = ? and is_del = ?", a.TagID, 0).Find(&articleTags).Error; err != nil {
+func (m *Model) ListArticleTagByTID(tagID uint32) ([]*dao.ArticleTag, error) {
+	var articleTags []*dao.ArticleTag
+	if err := m.engine.Where("tag_id = ? and is_del = ?", tagID, 0).Find(&articleTags).Error; err != nil {
 		return nil, err
 	}
 	return articleTags, nil
 }
 
 // select articleTags on article_id in ? and is_del = ?
-func (a *ArticleTag) ListByAIDs(db *gorm.DB, articleIDs []uint32) ([]*ArticleTag, error) {
-	var articleTags []*ArticleTag
-	err := db.Where("article_id in (?) and is_del = ?", articleIDs, 0).Find(&articleTags).Error
+func (m *Model) ListArticleTagByAIDs(articleIDs []uint32) ([]*dao.ArticleTag, error) {
+	var articleTags []*dao.ArticleTag
+	err := m.engine.Where("article_id in (?) and is_del = ?", articleIDs, 0).Find(&articleTags).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
 	return articleTags, nil
 }
 
-func (a *ArticleTag) Create(db *gorm.DB) error {
-	return db.Create(a).Error
+func (m *Model) CreateArticleTag(articleID, tagID uint32, createdBy string) error {
+	articleTag := &dao.ArticleTag{
+		Common: &dao.Common{
+			CreatedBy: createdBy,
+		},
+		ArticleID: articleID,
+		TagID:     tagID,
+	}
+	return m.engine.Create(articleTag).Error
 }
 
-func (a *ArticleTag) UpdateOne(db *gorm.DB, values interface{}) error {
-	return db.Model(a).Where("article_id = ? and is_del = ?", a.ArticleID, 0).Limit(1).Updates(values).Error
+func (m *Model) UpdateArticleTag(articleID, tagID uint32, modifiedBy string) error {
+	articleTag := dao.ArticleTag{ArticleID: articleID}
+	values := map[string]interface{}{
+		"article_id":  articleID,
+		"tag_id":      tagID,
+		"modified_by": modifiedBy,
+	}
+	return m.engine.Model(&articleTag).
+		Where("article_id = ? and is_del = ?", articleID, 0).Limit(1).Updates(values).Error
 }
 
-func (a *ArticleTag) DeleteByAID(db *gorm.DB) error {
-	return db.Where("article_id = ? and is_del = ?", a.ArticleID, 0).Delete(a).Error
+func (m *Model) DeleteArticleTagByAID(articleID uint32) error {
+	articleTag := dao.ArticleTag{ArticleID: articleID}
+	return m.engine.Where("article_id = ? and is_del = ?", articleID, 0).Delete(&articleTag).Error
 }
 
-func (a *ArticleTag) DeleteByTID(db *gorm.DB) error {
-	return db.Where("tag_id = ? and is_del = ?", a.TagID, 0).Delete(a).Error
+func (m *Model) DeleteArticleTagByTID(tagID uint32) error {
+	articleTag := dao.ArticleTag{TagID: tagID}
+	return m.engine.Where("tag_id = ? and is_del = ?", tagID, 0).Delete(&articleTag).Error
 }
 
-func (a *ArticleTag) DeleteOne(db *gorm.DB) error {
-	return db.Where("article_id = ? and is_del = ?", a.ArticleID, 0).Delete(a).Limit(1).Error
+func (m *Model) DeleteOne(articleID uint32) error {
+	articleTag := dao.ArticleTag{ArticleID: articleID}
+	return m.engine.Where("article_id = ? and is_del = ?", articleID, 0).Delete(&articleTag).Limit(1).Error
 }

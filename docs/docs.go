@@ -55,7 +55,7 @@ var doc = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/model.ArticleSwagger"
+                            "$ref": "#/definitions/dao.ArticleSwagger"
                         }
                     },
                     "400": {
@@ -148,7 +148,7 @@ var doc = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/model.Article"
+                            "$ref": "#/definitions/dao.Article"
                         }
                     },
                     "400": {
@@ -185,7 +185,7 @@ var doc = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/model.Article"
+                            "$ref": "#/definitions/dao.Article"
                         }
                     },
                     "400": {
@@ -262,7 +262,7 @@ var doc = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/model.Article"
+                            "$ref": "#/definitions/dao.Article"
                         }
                     },
                     "400": {
@@ -357,7 +357,7 @@ var doc = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/model.ArticleSwagger"
+                            "$ref": "#/definitions/dao.ArticleSwagger"
                         }
                     },
                     "400": {
@@ -417,7 +417,7 @@ var doc = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/model.TagSwagger"
+                            "$ref": "#/definitions/dao.TagSwagger"
                         }
                     },
                     "400": {
@@ -480,7 +480,7 @@ var doc = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/model.Tag"
+                            "$ref": "#/definitions/dao.Tag"
                         }
                     },
                     "400": {
@@ -553,7 +553,7 @@ var doc = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Tag"
+                                "$ref": "#/definitions/dao.Tag"
                             }
                         }
                     },
@@ -623,24 +623,7 @@ var doc = `{
                 }
             }
         },
-        "errcode.Error": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                },
-                "details": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "msg": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.Article": {
+        "dao.Article": {
             "type": "object",
             "properties": {
                 "content": {
@@ -681,13 +664,13 @@ var doc = `{
                 }
             }
         },
-        "model.ArticleSwagger": {
+        "dao.ArticleSwagger": {
             "type": "object",
             "properties": {
                 "list": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Article"
+                        "$ref": "#/definitions/dao.Article"
                     }
                 },
                 "pager": {
@@ -695,7 +678,7 @@ var doc = `{
                 }
             }
         },
-        "model.Tag": {
+        "dao.Tag": {
             "type": "object",
             "properties": {
                 "created_by": {
@@ -727,17 +710,34 @@ var doc = `{
                 }
             }
         },
-        "model.TagSwagger": {
+        "dao.TagSwagger": {
             "type": "object",
             "properties": {
                 "list": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Tag"
+                        "$ref": "#/definitions/dao.Tag"
                     }
                 },
                 "pager": {
                     "$ref": "#/definitions/app.Pager"
+                }
+            }
+        },
+        "errcode.Error": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "msg": {
+                    "type": "string"
                 }
             }
         }

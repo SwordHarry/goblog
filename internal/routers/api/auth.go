@@ -3,13 +3,14 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"goblog/global"
+	"goblog/internal/request"
 	"goblog/internal/service"
 	"goblog/pkg/app"
 	"goblog/pkg/errcode"
 )
 
 func GetAuth(c *gin.Context) {
-	param := service.AuthRequest{}
+	param := request.AuthRequest{}
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {

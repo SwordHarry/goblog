@@ -23,13 +23,18 @@ func NewResponse(ctx *gin.Context) *Response {
 
 func (r *Response) ToResponse(data interface{}) {
 	if data == nil {
-		data = gin.H{}
+		data = gin.H{
+			"code": 0,
+			"msg":  "success",
+		}
 	}
 	r.Ctx.JSON(http.StatusOK, data)
 }
 
 func (r *Response) ToResponseList(list interface{}, totalRows int) {
 	r.Ctx.JSON(http.StatusOK, gin.H{
+		"code": 0,
+		"msg":  "success",
 		"list": list,
 		"pager": Pager{
 			Page:      GetPage(r.Ctx),

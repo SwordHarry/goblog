@@ -1,25 +1,8 @@
 package model
 
 import (
-	"github.com/jinzhu/gorm"
-	"goblog/pkg/app"
+	"goblog/internal/dao"
 )
-
-type Tag struct {
-	*Model
-	Name  string `json:"name"`
-	State uint8  `json:"state"`
-}
-
-func (t *Tag) TableName() string {
-	return "blog_tag"
-}
-
-// 专门用于 swagger 显示返回值
-type TagSwagger struct {
-	List  []*Tag
-	Pager *app.Pager
-}
 
 // gorm for sql 相关操作
 // where 设置筛选条件，接收 map struct string 作为条件
@@ -30,24 +13,29 @@ type TagSwagger struct {
 // delete 删除
 // count 统计记录数
 
-func (t *Tag) Get(db *gorm.DB) (*Tag, error) {
-	tag := new(Tag)
-	err := db.Where("id = ? and is_del = ? and state = ?", t.ID, 0, t.State).First(tag).Error
+func (m *Model) GetTagById(tagId uint32, tagState uint8) (*dao.Tag, error) {
+	tag := new(dao.Tag)
+	err := m.engine.Where("id = ? and is_del = ? and state = ?", tagId, 0, tagState).First(&tag).Error
 	return tag, err
 }
-func (t *Tag) GetByName(db *gorm.DB) (*Tag, error) {
-	tag := new(Tag)
-	err := db.Where("name = ? and is_del = ? and state = ?", t.Name, 0, t.State).First(tag).Error
+func (m *Model) GetTagByName(tagName string, tagState uint8) (*dao.Tag, error) {
+	tag := new(dao.Tag)
+	err := m.engine.Where("name = ? and is_del = ? and state = ?", tagName, 0, tagState).First(&tag).Error
 	return tag, err
 }
 
 // count tag
-func (t *Tag) Count(db *gorm.DB) (int, error) {
+func (m *Model) CountTag(tagName string, tagState uint8) (int, error) {
 	var count int
-	if t.Name != "" {
-		db = db.Where("name = ?", t.Name)
+	db := m.engine
+	t := dao.Tag{
+		Name:  tagName,
+		State: tagState,
 	}
-	db = db.Where("state = ?", t.State)
+	if tagName != "" {
+		db = db.Where("name = ?", tagName)
+	}
+	db = db.Where("state = ?", tagState)
 	if err := db.Model(&t).Where("is_del = ?", 0).Count(&count).Error; err != nil {
 		return 0, err
 	}
@@ -55,30 +43,49 @@ func (t *Tag) Count(db *gorm.DB) (int, error) {
 }
 
 // list tag
-func (t *Tag) List(db *gorm.DB, pageOffset, pageSize int) ([]*Tag, error) {
-	var tags []*Tag
+func (m *Model) ListTags(tagName string, tagState uint8, pageOffset, pageSize int) ([]*dao.Tag, error) {
+	var tags []*dao.Tag
 	var err error
+	db := m.engine
 	if pageOffset >= 0 && pageSize > 0 {
 		db = db.Offset(pageOffset).Limit(pageSize)
 	}
-	if t.Name != "" {
-		db = db.Where("name = ?", t.Name)
+	if tagName != "" {
+		db = db.Where("name = ?", tagName)
 	}
-	db = db.Where("state = ?", t.State)
+	db = db.Where("state = ?", tagState)
 	if err = db.Where("is_del = ?", 0).Find(&tags).Error; err != nil {
 		return nil, err
 	}
 	return tags, nil
 }
 
-func (t *Tag) Create(db *gorm.DB) error {
-	return db.Create(t).Error
+func (m *Model) CreateTag(tagName string, tagState uint8, createdBy string) error {
+	t := dao.Tag{
+		Name:   tagName,
+		State:  tagState,
+		Common: &dao.Common{CreatedBy: createdBy},
+	}
+	return m.engine.Create(&t).Error
 }
 
-func (t *Tag) Update(db *gorm.DB, value interface{}) error {
-	return db.Model(t).Where("id = ? and is_del = ?", t.ID, 0).Update(value).Error
+func (m *Model) UpdateTag(id uint32, name string, state uint8, modifiedBy string) error {
+	t := dao.Tag{
+		Common: &dao.Common{
+			ID: id,
+		},
+	}
+	values := map[string]interface{}{
+		"state":       state,
+		"modified_by": modifiedBy,
+	}
+	if name != "" {
+		values["name"] = name
+	}
+	return m.engine.Model(&t).Where("id = ? and is_del = ?", t.ID, 0).Update(values).Error
 }
 
-func (t *Tag) Delete(db *gorm.DB) error {
-	return db.Where("id = ? and is_del = ?", t.ID, 0).Delete(t).Error
+func (m *Model) DeleteTag(id uint32) error {
+	t := dao.Tag{Common: &dao.Common{ID: id}}
+	return m.engine.Where("id = ? and is_del = ?", t.ID, 0).Delete(&t).Error
 }

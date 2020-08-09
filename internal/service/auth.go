@@ -1,14 +1,12 @@
 package service
 
-import "errors"
+import (
+	"errors"
+	"goblog/internal/request"
+)
 
-type AuthRequest struct {
-	AppKey    string `form:"app_key" json:"app_key" binding:"required"`
-	AppSecret string `form:"app_secret" json:"app_secret" binding:"required"`
-}
-
-func (svc *Service) CheckAuth(param *AuthRequest) error {
-	auth, err := svc.dao.GetAuth(param.AppKey, param.AppSecret)
+func (svc *Service) CheckAuth(param *request.AuthRequest) error {
+	auth, err := svc.model.GetAuth(param.AppKey, param.AppSecret)
 	if err != nil {
 		return err
 	}

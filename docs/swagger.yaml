@@ -8,18 +8,7 @@ definitions:
       total_rows:
         type: integer
     type: object
-  errcode.Error:
-    properties:
-      code:
-        type: integer
-      details:
-        items:
-          type: string
-        type: array
-      msg:
-        type: string
-    type: object
-  model.Article:
+  dao.Article:
     properties:
       content:
         type: string
@@ -46,16 +35,16 @@ definitions:
       title:
         type: string
     type: object
-  model.ArticleSwagger:
+  dao.ArticleSwagger:
     properties:
       list:
         items:
-          $ref: '#/definitions/model.Article'
+          $ref: '#/definitions/dao.Article'
         type: array
       pager:
         $ref: '#/definitions/app.Pager'
     type: object
-  model.Tag:
+  dao.Tag:
     properties:
       created_by:
         type: string
@@ -76,14 +65,25 @@ definitions:
       state:
         type: integer
     type: object
-  model.TagSwagger:
+  dao.TagSwagger:
     properties:
       list:
         items:
-          $ref: '#/definitions/model.Tag'
+          $ref: '#/definitions/dao.Tag'
         type: array
       pager:
         $ref: '#/definitions/app.Pager'
+    type: object
+  errcode.Error:
+    properties:
+      code:
+        type: integer
+      details:
+        items:
+          type: string
+        type: array
+      msg:
+        type: string
     type: object
 info:
   contact: {}
@@ -113,7 +113,7 @@ paths:
         "200":
           description: 成功
           schema:
-            $ref: '#/definitions/model.ArticleSwagger'
+            $ref: '#/definitions/dao.ArticleSwagger'
         "400":
           description: 请求错误
           schema:
@@ -174,7 +174,7 @@ paths:
         "200":
           description: 成功
           schema:
-            $ref: '#/definitions/model.Article'
+            $ref: '#/definitions/dao.Article'
         "400":
           description: 请求错误
           schema:
@@ -221,7 +221,7 @@ paths:
         "200":
           description: 成功
           schema:
-            $ref: '#/definitions/model.Article'
+            $ref: '#/definitions/dao.Article'
         "400":
           description: 请求错误
           schema:
@@ -270,7 +270,7 @@ paths:
         "200":
           description: 成功
           schema:
-            $ref: '#/definitions/model.Article'
+            $ref: '#/definitions/dao.Article'
         "400":
           description: 请求错误
           schema:
@@ -309,7 +309,7 @@ paths:
         "200":
           description: 成功
           schema:
-            $ref: '#/definitions/model.ArticleSwagger'
+            $ref: '#/definitions/dao.ArticleSwagger'
         "400":
           description: 请求错误
           schema:
@@ -349,7 +349,7 @@ paths:
         "200":
           description: 成功
           schema:
-            $ref: '#/definitions/model.TagSwagger'
+            $ref: '#/definitions/dao.TagSwagger'
         "400":
           description: 请求错误
           schema:
@@ -392,7 +392,7 @@ paths:
         "200":
           description: 成功
           schema:
-            $ref: '#/definitions/model.Tag'
+            $ref: '#/definitions/dao.Tag'
         "400":
           description: 请求错误
           schema:
@@ -464,7 +464,7 @@ paths:
           description: 成功
           schema:
             items:
-              $ref: '#/definitions/model.Tag'
+              $ref: '#/definitions/dao.Tag'
             type: array
         "400":
           description: 请求错误

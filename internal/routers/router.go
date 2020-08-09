@@ -50,7 +50,7 @@ func NewRouter() *gin.Engine {
 	// 注册 swagger 接口文档路由
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// 静态文件地址
-	r.StaticFS("/static", http.Dir(global.AppSetting.UploadSavePath))
+	r.StaticFS("/static", http.Dir(global.AppSetting.UploadImageSavePath))
 	// jwt 验证接口
 	r.GET("/auth", api.GetAuth)
 
