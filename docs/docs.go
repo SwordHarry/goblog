@@ -82,9 +82,9 @@ var doc = `{
                 "summary": "创建文章",
                 "parameters": [
                     {
-                        "type": "string",
+                        "type": "integer",
                         "description": "标签ID列表",
-                        "name": "tag_ids",
+                        "name": "tag_id",
                         "in": "formData"
                     },
                     {
@@ -124,7 +124,7 @@ var doc = `{
                     {
                         "type": "file",
                         "description": "cover封面图",
-                        "name": "image",
+                        "name": "img",
                         "in": "formData",
                         "required": true
                     }
@@ -196,8 +196,9 @@ var doc = `{
                     {
                         "type": "string",
                         "description": "文章ID",
-                        "name": "id",
-                        "in": "query"
+                        "name": "article_id",
+                        "in": "path",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -229,6 +230,12 @@ var doc = `{
                         "name": "modified_by",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "附属标签",
+                        "name": "tag_id",
+                        "in": "formData"
                     }
                 ],
                 "responses": {

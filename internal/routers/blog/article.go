@@ -25,12 +25,12 @@ func NewArticle() *Article {
 }
 
 // @Summary 获取单个文章
-// @Produce json
+// @Produce html
 // @Param id path int true "文章ID"
 // @Success 200 {object} dao.Article "成功"
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
-// @Router /api/v1/articles/{id} [get]
+// @Router /articles/{id} [get]
 func (a *Article) Get(c *gin.Context) {
 	param := request.ArticleRequest{ID: convert.StrTo(c.Param("id")).MustUint32()}
 	response := app.NewResponse(c)
@@ -158,13 +158,13 @@ func (a *Article) ViewIndex(c *gin.Context) {
 // @Summary 创建文章
 // @Produce json
 // @Accept multipart/form-data
-// @Param tag_ids formData string false "标签ID列表"
+// @Param tag_id formData int false "标签ID列表"
 // @Param title formData string true "文章标题"
 // @Param desc formData string true "文章简述"
 // @Param created_by formData string true "创建者"
 // @Param state formData int false "状态"
 // @Param md formData file true "md博客文件"
-// @Param image formData file true "cover封面图"
+// @Param img formData file true "cover封面图"
 // @Success 200 {object} dao.Article "成功"
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
@@ -218,7 +218,7 @@ func (a *Article) Create(c *gin.Context) {
 
 // @Summary 更新文章
 // @Produce json
-// @Param id query string false "文章ID"
+// @Param article_id path string true "文章ID"
 // @Param title formData string false "文章标题"
 // @Param desc formData string false "文章简述"
 // @Param cover_image_url formData file false "封面图片地址"

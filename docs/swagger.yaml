@@ -129,8 +129,8 @@ paths:
       parameters:
       - description: 标签ID列表
         in: formData
-        name: tag_ids
-        type: string
+        name: tag_id
+        type: integer
       - description: 文章标题
         in: formData
         name: title
@@ -157,7 +157,7 @@ paths:
         type: file
       - description: cover封面图
         in: formData
-        name: image
+        name: img
         required: true
         type: file
       produces:
@@ -226,8 +226,9 @@ paths:
     put:
       parameters:
       - description: 文章ID
-        in: query
-        name: id
+        in: path
+        name: article_id
+        required: true
         type: string
       - description: 文章标题
         in: formData
@@ -249,6 +250,10 @@ paths:
         in: formData
         name: modified_by
         required: true
+        type: string
+      - description: 附属标签
+        in: formData
+        name: tag_id
         type: string
       produces:
       - application/json
