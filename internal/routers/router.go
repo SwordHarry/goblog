@@ -68,6 +68,7 @@ func NewRouter() *gin.Engine {
 	})
 	// 加载 html
 	r.LoadHTMLGlob(filepath.Join("frontend", "**", "*.html"))
+	// 加载静态资源
 	for k, v := range StaticConfig {
 		r.Static(k, v)
 	}
