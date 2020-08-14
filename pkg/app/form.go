@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
-	"log"
 	"strings"
 )
 
@@ -38,7 +37,6 @@ func BindAndValid(c *gin.Context, v interface{}) (bool, ValidErrors) {
 	// shouldBind 将入参和结构体参数进行绑定
 	// 注意 content-type
 	err := c.ShouldBind(v)
-	log.Println(err)
 	// 错误信息国际化处理
 	if err != nil {
 		v := c.Value("trans")

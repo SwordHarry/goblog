@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{.Title}}</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css">
+    <link href="/css/info.css" rel="stylesheet" type="text/css">
+    <link href="/css/markdown.css" rel="stylesheet"type="text/css">
+    <link href="/css/header.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+{{template "info" .tags}}
+{{template "header"}}
+<div class="main-container">
+    <div class="markdown-container">
+        {{if .article.CoverImageUrl}}
+            <img class="cover" src={{.article.CoverImageUrl}} alt="封面图"/>
+        {{end}}
+        <div class="markdown-body">
+            {{.content}}
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -62,3 +62,7 @@ func (e *Error) StatusCode() int {
 	}
 	return http.StatusInternalServerError
 }
+
+func (e *Error) Error() string {
+	return fmt.Sprintf("error info: \n code: %s\nmsg: %s\ndetail: %s\n", e.Code, e.Msg, e.Details)
+}

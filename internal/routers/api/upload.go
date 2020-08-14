@@ -1,35 +1,42 @@
 package api
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"goblog/global"
 	"goblog/internal/service"
-	"goblog/pkg/app"
-	"goblog/pkg/convert"
-	"goblog/pkg/errcode"
 	"goblog/pkg/upload"
+	"path"
+	"strings"
 )
 
-func UploadFile(c *gin.Context) {
-	response := app.NewResponse(c)
-	file, fileHeader, err := c.Request.FormFile("file")
-	fileType := convert.StrTo(c.PostForm("type")).MustInt()
+// 上传文件
+func UploadFile(c *gin.Context, fileType upload.FileType) (*service.FileInfo, error) {
+	var fileName string
+	switch fileType {
+	case upload.TypeMd:
+		fileName = "md"
+	case upload.TypeImage:
+		fileName = "img"
+	default:
+		fileName = "md"
+	}
+	file, fileHeader, err := c.Request.FormFile(fileName)
 	if err != nil {
-		response.ToErrorResponse(errcode.InvalidParams.WithDetails(err.Error()))
-		return
+		return nil, err
 	}
 	if fileHeader == nil || fileType <= 0 {
-		response.ToErrorResponse(errcode.InvalidParams)
-		return
+		//response.ToErrorResponse(errcode.InvalidParams)
+		return nil, errors.New("invalidParams")
 	}
 	svc := service.New(c.Request.Context())
-	fileInfo, err := svc.UploadFile(upload.FileType(fileType), file, fileHeader)
+	fileInfo, err := svc.UploadFile(fileType, file, fileHeader)
 	if err != nil {
 		global.Logger.Errorf(c, "svc.UploadFile err: %v", err)
-		response.ToErrorResponse(errcode.ErrorUploadFileFail.WithDetails(err.Error()))
-		return
+		return nil, err
 	}
-	response.ToResponse(gin.H{
-		"file_access_url": fileInfo.AccessUrl,
-	})
+	// 记录原始文件名，去除扩展名
+	ext := path.Ext(fileHeader.Filename)
+	fileInfo.OriginName = strings.TrimSuffix(fileHeader.Filename, ext)
+	return fileInfo, nil
 }

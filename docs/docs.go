@@ -73,75 +73,60 @@ var doc = `{
                 }
             },
             "post": {
+                "consumes": [
+                    "multipart/form-data"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "summary": "创建文章",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "标签ID列表",
                         "name": "tag_ids",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "integer"
-                            }
-                        }
+                        "in": "formData"
                     },
                     {
+                        "type": "string",
                         "description": "文章标题",
                         "name": "title",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData",
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "description": "文章简述",
                         "name": "desc",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData",
+                        "required": true
                     },
                     {
-                        "description": "封面图片地址",
-                        "name": "cover_image_url",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "文章内容",
-                        "name": "content",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
+                        "type": "string",
                         "description": "创建者",
                         "name": "created_by",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "in": "formData",
+                        "required": true
                     },
                     {
+                        "type": "integer",
                         "description": "状态",
                         "name": "state",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "md博客文件",
+                        "name": "md",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "cover封面图",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -209,53 +194,41 @@ var doc = `{
                 "summary": "更新文章",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "文章ID",
-                        "name": "article_id",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "name": "id",
+                        "in": "query"
                     },
                     {
+                        "type": "string",
                         "description": "文章标题",
                         "name": "title",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData"
                     },
                     {
+                        "type": "string",
                         "description": "文章简述",
                         "name": "desc",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData"
                     },
                     {
+                        "type": "file",
                         "description": "封面图片地址",
                         "name": "cover_image_url",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData"
                     },
                     {
+                        "type": "file",
                         "description": "文章内容",
                         "name": "content",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData"
                     },
                     {
+                        "type": "string",
                         "description": "修改者",
                         "name": "modified_by",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {

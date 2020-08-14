@@ -20,8 +20,9 @@ func (a *Article) TableName() string {
 
 // 关联查询
 type ArticleRow struct {
-	ArticleID     uint32
+	ID            uint32 // article id
 	TagID         uint32
+	CreatedOn     uint32
 	TagName       string
 	Title         string
 	Desc          string
@@ -33,4 +34,10 @@ type ArticleRow struct {
 type ArticleSwagger struct {
 	List  []*Article
 	Pager *app.Pager
+}
+
+// 文章附带标签列表
+type ArticleWithTags struct {
+	*Article
+	Tags []*Tag
 }

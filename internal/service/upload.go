@@ -9,8 +9,9 @@ import (
 )
 
 type FileInfo struct {
-	Name      string
-	AccessUrl string
+	OriginName string
+	Name       string
+	AccessUrl  string
 }
 
 func (svc *Service) UploadFile(fileType upload.FileType, file multipart.File, fileHeader *multipart.FileHeader) (*FileInfo, error) {

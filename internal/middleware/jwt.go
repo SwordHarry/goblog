@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"goblog/pkg/app"
 	"goblog/pkg/errcode"
+	"net/http"
 )
 
 // jwt 中间件
@@ -17,8 +18,10 @@ func JWT() gin.HandlerFunc {
 		// 先从 url query 中寻找token
 		if s, exist := c.GetQuery("token"); exist {
 			token = s
-		} else {
+		} else if s, err := c.Cookie("token"); err != http.ErrNoCookie {
 			// 从请求头中寻找 token
+			token = s
+		} else {
 			token = c.GetHeader("token")
 		}
 

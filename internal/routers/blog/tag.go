@@ -1,10 +1,10 @@
-package v1
+package blog
 
 import (
 	"github.com/gin-gonic/gin"
 	"goblog/global"
 	"goblog/internal/request"
-	"goblog/internal/routers/api"
+	"goblog/internal/routers/common"
 	"goblog/internal/service"
 	"goblog/pkg/app"
 	"goblog/pkg/convert"
@@ -38,13 +38,14 @@ func (t *Tag) List(c *gin.Context) {
 	// 入参校验
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {
-		api.InvalidForBind(c, response, errs)
+		common.InvalidForBind(c, response, errs)
 		return
 	}
 
 	svc := service.New(c.Request.Context())
 	pager := app.Pager{Page: app.GetPage(c), PageSize: app.GetPageSize(c)}
 	totalRows, err := svc.CountTag(&request.CountTagRequest{Name: param.Name, State: param.State})
+	pager.TotalRows = totalRows
 	if err != nil {
 		global.Logger.Errorf(c, "svc.CountTag err: %v", err)
 		response.ToErrorResponse(errcode.ErrorCountTagFail)
@@ -56,8 +57,10 @@ func (t *Tag) List(c *gin.Context) {
 		response.ToErrorResponse(errcode.ErrorGetTagListFail)
 		return
 	}
-	response.ToResponseList(tags, totalRows)
-	return
+	response.ToResponseList(gin.H{
+		"tags":  tags,
+		"pager": pager,
+	}, totalRows)
 }
 
 // @Summary 新增标签
@@ -74,7 +77,7 @@ func (t *Tag) Create(c *gin.Context) {
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {
-		api.InvalidForBind(c, response, errs)
+		common.InvalidForBind(c, response, errs)
 		return
 	}
 	svc := service.New(c.Request.Context())
@@ -86,7 +89,7 @@ func (t *Tag) Create(c *gin.Context) {
 	}
 	// 标签已存在
 	if existedTag != nil && existedTag.ID > 0 {
-		response.ToErrorResponse(errcode.ErrorCreateTagExistedFail)
+		response.ToErrorResponse(errcode.ErrorCreateTagExistedFail.WithDetails(string(existedTag.ID)))
 		return
 	}
 	err = svc.CreateTag(&param)
@@ -116,7 +119,7 @@ func (t *Tag) Update(c *gin.Context) {
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {
-		api.InvalidForBind(c, response, errs)
+		common.InvalidForBind(c, response, errs)
 		return
 	}
 
@@ -145,7 +148,7 @@ func (t *Tag) Delete(c *gin.Context) {
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {
-		api.InvalidForBind(c, response, errs)
+		common.InvalidForBind(c, response, errs)
 		return
 	}
 	svc := service.New(c.Request.Context())

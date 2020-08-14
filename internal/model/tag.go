@@ -86,6 +86,22 @@ func (m *Model) UpdateTag(id uint32, name string, state uint8, modifiedBy string
 }
 
 func (m *Model) DeleteTag(id uint32) error {
+	articleTag := dao.ArticleTag{TagID: id}
 	t := dao.Tag{Common: &dao.Common{ID: id}}
-	return m.engine.Where("id = ? and is_del = ?", t.ID, 0).Delete(&t).Error
+	// 使用事务
+	// 先删除 article_tag
+	tx := m.engine.Begin()
+	err := m.engine.Where("tag_id = ? and is_del = ?", id, 0).Delete(&articleTag).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	// 再删除 tag
+	err = m.engine.Where("id = ? and is_del = ?", t.ID, 0).Delete(&t).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
+	return nil
 }

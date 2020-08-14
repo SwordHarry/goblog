@@ -1,0 +1,27 @@
+{{define "info"}}
+    <div class="info-container">
+        <div class="info-avatar">
+            <img class="avatar" src="/images/avatar.jpeg" alt="头像"/>
+        </div>
+        <p class="info-name">一把健</p>
+        <p class="info-desc">辣鸡苦逼gopher，搬砖在读</p>
+        <p class="info-other">&emsp;人这一生，最重要的事，不是做自己喜欢的事，而是喜欢上自己要做的事</p>
+        <p>标签：</p>
+        <ul class="tags-list">
+            {{range .}}
+                <li><a href="/articles_tag/{{.ID}}">{{.Name}}</a></li>
+            {{end}}
+        </ul>
+        <div class="other-href">
+            <p>其他个人链接: </p>
+            <a href="https://github.com/SwordHarry"><img src="/images/github.png" alt="github"/></a>
+            <a href="https://blog.csdn.net/qq_39446719"><img src="/images/csdn.png" alt="github"/></a>
+        </div>
+    </div>
+{{end}}
+
+{{define "header"}}
+<ul class="header">
+    <li><a href="/">首页</a></li>
+</ul>
+{{end}}

@@ -5,14 +5,30 @@ import (
 	"goblog/internal/dao"
 )
 
-func (m *Model) CreateArticle(a *dao.Article) (*dao.Article, error) {
-	if err := m.engine.Create(a).Error; err != nil {
+// 创建 文章 和 文章标签，使用事务
+func (m *Model) CreateArticle(a *dao.Article, tagID uint32) (*dao.Article, error) {
+	tx := m.engine.Begin()
+	if err := tx.Create(a).Error; err != nil {
 		return nil, err
 	}
+	if tagID > 0 {
+		articleTag := &dao.ArticleTag{
+			Common: &dao.Common{
+				CreatedBy: a.CreatedBy,
+			},
+			ArticleID: a.ID,
+			TagID:     tagID,
+		}
+		if err := tx.Create(articleTag).Error; err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+	}
+	tx.Commit()
 	return a, nil
 }
 
-func (m *Model) UpdateArticle(param *dao.Article) error {
+func (m *Model) UpdateArticle(param *dao.Article, tagID uint32) error {
 	article := dao.Article{Common: &dao.Common{ID: param.ID}}
 	values := map[string]interface{}{
 		"modified_by": param.ModifiedBy,
@@ -30,7 +46,26 @@ func (m *Model) UpdateArticle(param *dao.Article) error {
 	if param.Content != "" {
 		values["content"] = param.Content
 	}
-	return m.engine.Model(&article).Updates(values).Where("id = ? and is_del = ?", article.ID, 0).Error
+	tx := m.engine.Begin()
+	err := tx.Model(&article).Updates(values).Where("id = ? and is_del = ?", article.ID, 0).Error
+	if err != nil {
+		return err
+	}
+	// 更新 文章和标签关系
+	articleTag := dao.ArticleTag{ArticleID: param.ID}
+	atValues := map[string]interface{}{
+		"article_id":  param.ID,
+		"tag_id":      tagID,
+		"modified_by": param.ModifiedBy,
+	}
+	err = tx.Model(&articleTag).
+		Where("article_id = ? and is_del = ?", param.ID, 0).Limit(1).Updates(atValues).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
+	return nil
 }
 
 func (m *Model) GetArticle(id uint32, state uint8) (*dao.Article, error) {
@@ -51,16 +86,27 @@ func (m *Model) ListArticles(state uint8, pageOffset, pageSize int) ([]*dao.Arti
 	if pageOffset >= 0 && pageSize > 0 {
 		db = db.Offset(pageOffset).Limit(pageSize)
 	}
-	err := db.Where("state = ? and is_del = ?", state, 0).Find(&result).Error
+	err := db.Where("state = ? and is_del = ?", state, 0).Order("created_on DESC").Find(&result).Error
 	if err != nil {
 		return result, err
 	}
 	return result, nil
 }
 
+// 删除 文章 和 文章标签，使用事务
 func (m *Model) DeleteArticle(id uint32) error {
+	tx := m.engine.Begin()
 	article := dao.Article{Common: &dao.Common{ID: id}}
-	return m.engine.Where("id = ? and is_del = ?", id, 0).Delete(&article).Error
+	if err := tx.Where("id = ? and is_del = ?", id, 0).Delete(&article).Error; err != nil {
+		return err
+	}
+	articleTag := dao.ArticleTag{ArticleID: id}
+	if err := tx.Where("article_id = ? and is_del = ?", id, 0).Delete(&articleTag).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
+	return nil
 }
 
 func (m *Model) CountArticles(state uint8) (int, error) {
@@ -78,6 +124,7 @@ func (m *Model) ListArticleByTID(tagID uint32, state uint8, pageOffset, pageSize
 		"ar.desc as article_desc",
 		"ar.cover_image_url",
 		"ar.content",
+		"ar.created_on",
 	}
 	fields = append(fields, []string{
 		"t.id as tag_id",
@@ -106,11 +153,12 @@ func (m *Model) ListArticleByTID(tagID uint32, state uint8, pageOffset, pageSize
 	for rows.Next() {
 		r := &dao.ArticleRow{}
 		if err := rows.Scan(
-			&r.ArticleID,
+			&r.ID,
 			&r.Title,
 			&r.Desc,
 			&r.CoverImageUrl,
 			&r.Content,
+			&r.CreatedOn,
 			&r.TagID,
 			&r.TagName,
 		); err != nil {

@@ -124,50 +124,42 @@ paths:
             $ref: '#/definitions/errcode.Error'
       summary: 获取多个文章
     post:
+      consumes:
+      - multipart/form-data
       parameters:
       - description: 标签ID列表
-        in: body
+        in: formData
         name: tag_ids
-        required: true
-        schema:
-          items:
-            type: integer
-          type: array
+        type: string
       - description: 文章标题
-        in: body
+        in: formData
         name: title
         required: true
-        schema:
-          type: string
+        type: string
       - description: 文章简述
-        in: body
+        in: formData
         name: desc
         required: true
-        schema:
-          type: string
-      - description: 封面图片地址
-        in: body
-        name: cover_image_url
-        required: true
-        schema:
-          type: string
-      - description: 文章内容
-        in: body
-        name: content
-        required: true
-        schema:
-          type: string
+        type: string
       - description: 创建者
-        in: body
+        in: formData
         name: created_by
         required: true
-        schema:
-          type: integer
+        type: string
       - description: 状态
-        in: body
+        in: formData
         name: state
-        schema:
-          type: integer
+        type: integer
+      - description: md博客文件
+        in: formData
+        name: md
+        required: true
+        type: file
+      - description: cover封面图
+        in: formData
+        name: image
+        required: true
+        type: file
       produces:
       - application/json
       responses:
@@ -234,36 +226,30 @@ paths:
     put:
       parameters:
       - description: 文章ID
-        in: body
-        name: article_id
-        schema:
-          type: string
+        in: query
+        name: id
+        type: string
       - description: 文章标题
-        in: body
+        in: formData
         name: title
-        schema:
-          type: string
+        type: string
       - description: 文章简述
-        in: body
+        in: formData
         name: desc
-        schema:
-          type: string
+        type: string
       - description: 封面图片地址
-        in: body
+        in: formData
         name: cover_image_url
-        schema:
-          type: string
+        type: file
       - description: 文章内容
-        in: body
+        in: formData
         name: content
-        schema:
-          type: string
+        type: file
       - description: 修改者
-        in: body
+        in: formData
         name: modified_by
         required: true
-        schema:
-          type: string
+        type: string
       produces:
       - application/json
       responses:

@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"goblog/global"
 	"goblog/internal/request"
+	"goblog/internal/routers/common"
 	"goblog/internal/service"
 	"goblog/pkg/app"
 	"goblog/pkg/errcode"
@@ -14,7 +15,7 @@ func GetAuth(c *gin.Context) {
 	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {
-		InvalidForBind(c, response, errs)
+		common.InvalidForBind(c, response, errs)
 		return
 	}
 	svc := service.New(c.Request.Context())

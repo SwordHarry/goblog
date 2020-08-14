@@ -19,9 +19,9 @@ create table `blog_tag` (
 create table `blog_article` (
     `id` int(10) unsigned not null auto_increment,
     `title` varchar(100) default '' comment '文章标题',
-    `desc` varchar(255) default '' comment '文章简述',
+    `desc` longtext comment '文章简述',
     `cover_image_url` varchar(255) default '' comment '封面图片地址',
-    `content` longtext comment '文章内容',
+    `content` varchar(255)  comment '文件路径',
     `created_on` int(10) unsigned default '0' comment '创建时间',
     `created_by` varchar(100) default '' comment '创建人',
     `modified_by` varchar(100) default '' comment '修改人',

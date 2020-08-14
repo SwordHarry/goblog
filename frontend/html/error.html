@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{.Title}}</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css">
+    <link href="/css/info.css" rel="stylesheet" type="text/css">
+    <link href="/css/markdown.css" rel="stylesheet"type="text/css">
+    <link href="/css/header.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+{{template "info"}}
+{{template "header"}}
+<div class="main-container">
+    <div class="markdown-container">
+        <div class="markdown-body">
+            <h3>出错啦！</h3>
+            <p>{{.error}}</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

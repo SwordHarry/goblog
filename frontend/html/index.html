@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>一把健的博客</title>
+    <link href="/css/reset.css" rel="stylesheet" type="text/css">
+    <link href="/css/info.css" rel="stylesheet" type="text/css">
+    <link href="/css/index.css" rel="stylesheet" type="text/css">
+    <link href="/css/header.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+{{template "info" .tags}}
+{{template "header"}}
+<div class="list-container">
+    {{range .articles}}
+        <div class="card">
+            <div class="card-content">
+
+                    <div class="title">
+                        <a href="articles/{{.ID}}">{{.Title}}</a>
+                    </div>
+                <p class="desc">&emsp;&emsp;{{.Desc}}&emsp;<a href="articles/{{.ID}}">全文</a></p>
+                    <div class="toolbar">发表于 {{.CreatedOn | timeStampToDate}}</div>
+            </div>
+        </div>
+    {{end}}
+
+    <ul class="pagination">
+        {{if gt .pager.Page 1}}
+        <li value="上一页"><a href="/?page={{sub .pager.Page 1}}">上一页</a></li>
+        {{end}}
+        <p>当前页数: {{.pager.Page}}&emsp;共 {{.pager.TotalRows}} 篇文章&emsp;共 {{.totalPage}} 页</p>
+        {{if lt .pager.Page .totalPage}}
+            <li value="下一页"><a href="/?page={{add .pager.Page 1}}">下一页</a></li>
+        {{end}}
+    </ul>
+</div>
+</body>
+</html>

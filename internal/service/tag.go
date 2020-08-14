@@ -32,9 +32,5 @@ func (svc *Service) UpdateTag(param *request.UpdateTagRequest) error {
 }
 
 func (svc *Service) DeleteTag(param *request.DeleteTagRequest) error {
-	err := svc.model.DeleteArticleTagByTID(param.ID)
-	if err != nil {
-		return err
-	}
 	return svc.model.DeleteTag(param.ID)
 }

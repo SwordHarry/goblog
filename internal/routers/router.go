@@ -8,14 +8,17 @@ import (
 	"goblog/global"
 	"goblog/internal/middleware"
 	"goblog/internal/routers/api"
-	"goblog/internal/routers/api/v1"
+	"goblog/internal/routers/blog"
 	"goblog/pkg/limiter"
+	"goblog/pkg/util"
+	"html/template"
 	"net/http"
+	"path/filepath"
 	"time"
 )
 
 const (
-	apiV1Str = "/api/v1"
+	apiPrefix = "/api/v1"
 )
 
 // 限流器
@@ -25,6 +28,12 @@ var methodLimiters = limiter.NewMethodLimiter().AddBuckets(limiter.BucketRule{
 	Capacity:     10,
 	Quantum:      10,
 })
+
+var StaticConfig = map[string]string{
+	"/css":    "frontend/css/",
+	"/js":     "frontend/js/",
+	"/images": "frontend/images",
+}
 
 func NewRouter() *gin.Engine {
 	r := gin.New()
@@ -38,7 +47,7 @@ func NewRouter() *gin.Engine {
 		// recover 加 邮件报警 中间件
 		r.Use(middleware.Recovery())
 	}
-	// 国际化中间件
+	// 国际化中间件 注意数据竞态
 	r.Use(middleware.Translations())
 	// 限流中间件
 	r.Use(middleware.RateLimiter(methodLimiters))
@@ -47,17 +56,25 @@ func NewRouter() *gin.Engine {
 	// 链路追踪中间件
 	r.Use(middleware.Tracing())
 	// ————————————————————— end 通用中间件 ——————————————————————
-	// 注册 swagger 接口文档路由
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// 静态文件地址
-	r.StaticFS("/static", http.Dir(global.AppSetting.UploadImageSavePath))
+	r.StaticFS("/static/image", http.Dir(global.AppSetting.UploadImageSavePath))
 	// jwt 验证接口
 	r.GET("/auth", api.GetAuth)
-
+	// 注册渲染函数
+	r.SetFuncMap(template.FuncMap{
+		"timeStampToDate": util.TimeStampToDate,
+		"add":             util.Add,
+		"sub":             util.Sub,
+	})
+	// 加载 html
+	r.LoadHTMLGlob(filepath.Join("frontend", "**", "*.html"))
+	for k, v := range StaticConfig {
+		r.Static(k, v)
+	}
 	// ————————————————————— begin 业务api ——————————————————————
-	article := v1.NewArticle()
-	tag := v1.NewTag()
-	apiV1 := r.Group(apiV1Str)
+	article := blog.NewArticle()
+	tag := blog.NewTag()
+	apiV1 := r.Group(apiPrefix)
 	// JWT 中间件
 	apiV1.Use(middleware.JWT())
 	{
@@ -66,16 +83,16 @@ func NewRouter() *gin.Engine {
 		apiV1.DELETE("/tags/:id", tag.Delete)
 		apiV1.PUT("/tags/:id", tag.Update)
 		apiV1.PATCH("/tags/:id/state", tag.Update)
-		apiV1.GET("/tags", tag.List)
+		//r.GET("/tags", tag.List)
 		// articles
 		apiV1.POST("/articles", article.Create)
 		apiV1.DELETE("/articles/:id", article.Delete)
 		apiV1.PUT("/articles/:id", article.Update)
-		apiV1.GET("/articles/:id", article.Get)
-		apiV1.GET("/articles_tag", article.ListByTagID)
-		apiV1.GET("/articles", article.List)
-		// upload
-		apiV1.POST("/upload", api.UploadFile)
+		r.GET("/articles/:id", article.Get)
+		r.GET("/articles_tag/:id", article.ListByTagID)
+		r.GET("/", article.ViewIndex)
+		// 注册 swagger 接口文档路由
+		apiV1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 	// ————————————————————— end 业务api ——————————————————————
 	return r

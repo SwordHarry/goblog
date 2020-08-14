@@ -14,6 +14,7 @@ require (
 	github.com/jinzhu/gorm v1.9.15
 	github.com/juju/ratelimit v1.0.1
 	github.com/opentracing/opentracing-go v1.2.0
+	github.com/russross/blackfriday/v2 v2.0.1
 	github.com/spf13/viper v1.7.0
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.7
