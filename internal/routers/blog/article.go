@@ -24,6 +24,11 @@ func NewArticle() *Article {
 	return &Article{}
 }
 
+const (
+	indexHtml   = "index.html"
+	articleHtml = "article.html"
+)
+
 // @Summary 获取单个文章
 // @Produce html
 // @Param id path int true "文章ID"
@@ -61,7 +66,7 @@ func (a *Article) Get(c *gin.Context) {
 		global.Logger.Errorf(c, "svc.GetTagList err: %v", err)
 		common.ViewErr(c, err)
 	}
-	common.View(c, "article.html", gin.H{
+	common.View(c, articleHtml, gin.H{
 		"article": article,
 		"content": template.HTML(s),
 		"tags":    tags,
@@ -102,7 +107,7 @@ func (a *Article) ListByTagID(c *gin.Context) {
 		global.Logger.Errorf(c, "svc.GetTagList err: %v", err)
 		common.ViewErr(c, err)
 	}
-	common.View(c, "index.html", gin.H{
+	common.View(c, indexHtml, gin.H{
 		"articles":  articles,
 		"tags":      tags,
 		"pager":     &pager,
@@ -145,7 +150,7 @@ func (a *Article) ViewIndex(c *gin.Context) {
 		global.Logger.Errorf(c, "svc.GetTagList err: %v", err)
 		common.ViewErr(c, err)
 	}
-	common.View(c, "index.html", gin.H{
+	common.View(c, indexHtml, gin.H{
 		"articles":  articles,
 		"tags":      tags,
 		"pager":     &pager,
@@ -212,7 +217,7 @@ func (a *Article) Create(c *gin.Context) {
 		response.ToErrorResponse(errcode.ErrorCreateArticleFail)
 		return
 	}
-	response.ToResponse(gin.H{"code": 0, "msg": "success", "data": article})
+	response.ToResponse(gin.H{"data": article})
 	return
 }
 
@@ -257,7 +262,7 @@ func (a *Article) Update(c *gin.Context) {
 		response.ToErrorResponse(errcode.ErrorUpdateArticleFail)
 		return
 	}
-	response.ToResponse(gin.H{"code": 0, "msg": "success"})
+	response.ToResponse(nil)
 	return
 }
 
@@ -283,7 +288,7 @@ func (a *Article) Delete(c *gin.Context) {
 		response.ToErrorResponse(errcode.ErrorDeleteArticleFail)
 		return
 	}
-	response.ToResponse(gin.H{"code": 0, "msg": "success"})
+	response.ToResponse(nil)
 	return
 }
 

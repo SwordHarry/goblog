@@ -68,18 +68,6 @@ func (svc *Service) GetArticleListByTagID(param *request.ArticleListByTIDRequest
 	if err != nil {
 		return nil, 0, err
 	}
-	//var articleList []*dao.Article
-	//for _, article := range articles {
-	//	articleList = append(articleList, &dao.Article{
-	//		Common: &dao.Common{
-	//			ID:         article.ArticleID,
-	//		},
-	//		Title:         article.Title,
-	//		Desc:          article.Desc,
-	//		Content:       article.Content,
-	//		CoverImageUrl: article.CoverImageUrl,
-	//	})
-	//}
 	return articles, articleCount, nil
 }
 

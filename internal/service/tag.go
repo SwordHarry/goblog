@@ -7,7 +7,6 @@ import (
 	"goblog/pkg/app"
 )
 
-// service 层与接口校验层合并
 func (svc *Service) CountTag(param *request.CountTagRequest) (int, error) {
 	return svc.model.CountTag(param.Name, param.State)
 }

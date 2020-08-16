@@ -4,7 +4,6 @@ import (
 	"github.com/russross/blackfriday/v2"
 	"goblog/global"
 	"io/ioutil"
-	"log"
 	"regexp"
 	"strings"
 )
@@ -12,8 +11,6 @@ import (
 // 获取 markdown 文件并转移成 html
 func GetMd(fileName string) ([]byte, error) {
 	filePath := global.AppSetting.UploadMDSavePath + "/" + fileName
-
-	log.Println(filePath)
 	b, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		return nil, err

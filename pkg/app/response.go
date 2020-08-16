@@ -11,22 +11,19 @@ type Response struct {
 	Ctx *gin.Context
 }
 
-type Pager struct {
-	Page      int `json:"page"`
-	PageSize  int `json:"page_size"`
-	TotalRows int `json:"total_rows"`
-}
-
 func NewResponse(ctx *gin.Context) *Response {
 	return &Response{ctx}
 }
 
-func (r *Response) ToResponse(data interface{}) {
+func (r *Response) ToResponse(data map[string]interface{}) {
 	if data == nil {
 		data = gin.H{
 			"code": 0,
 			"msg":  "success",
 		}
+	} else {
+		data["code"] = 0
+		data["msg"] = "success"
 	}
 	r.Ctx.JSON(http.StatusOK, data)
 }

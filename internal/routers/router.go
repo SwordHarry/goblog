@@ -37,16 +37,8 @@ var StaticConfig = map[string]string{
 
 func NewRouter() *gin.Engine {
 	r := gin.New()
+	apiV1 := r.Group(apiPrefix)
 	// ————————————————————— begin 通用中间件 ——————————————————————
-	if global.ServerSetting.RunMode == gin.DebugMode {
-		r.Use(gin.Logger())
-		r.Use(gin.Recovery())
-	} else {
-		// 访问日志记录中间件
-		r.Use(middleware.AccessLog())
-		// recover 加 邮件报警 中间件
-		r.Use(middleware.Recovery())
-	}
 	// 国际化中间件 注意数据竞态
 	r.Use(middleware.Translations())
 	// 限流中间件
@@ -55,6 +47,16 @@ func NewRouter() *gin.Engine {
 	r.Use(middleware.ContextTimeout(global.AppSetting.DefaultContextTimeout))
 	// 链路追踪中间件
 	r.Use(middleware.Tracing())
+	apiV1.Use(middleware.Tracing())
+	if global.ServerSetting.RunMode == gin.DebugMode {
+		r.Use(gin.Logger())
+		r.Use(gin.Recovery())
+	} else {
+		// 访问日志记录中间件
+		apiV1.Use(middleware.AccessLog())
+		// recover 加 邮件报警 中间件
+		r.Use(middleware.Recovery())
+	}
 	// ————————————————————— end 通用中间件 ——————————————————————
 	// 静态文件地址
 	r.StaticFS("/static/image", http.Dir(global.AppSetting.UploadImageSavePath))
@@ -75,7 +77,7 @@ func NewRouter() *gin.Engine {
 	// ————————————————————— begin 业务api ——————————————————————
 	article := blog.NewArticle()
 	tag := blog.NewTag()
-	apiV1 := r.Group(apiPrefix)
+
 	// JWT 中间件
 	apiV1.Use(middleware.JWT())
 	{

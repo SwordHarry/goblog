@@ -98,7 +98,7 @@ func (t *Tag) Create(c *gin.Context) {
 		response.ToErrorResponse(errcode.ErrorCreateTagFail)
 		return
 	}
-	response.ToResponse(gin.H{"code": 0, "msg": "success"})
+	response.ToResponse(nil)
 	return
 }
 
@@ -130,7 +130,7 @@ func (t *Tag) Update(c *gin.Context) {
 		response.ToErrorResponse(errcode.ErrorUpdateTagFail)
 		return
 	}
-	response.ToResponse(gin.H{"code": 0, "msg": "success"})
+	response.ToResponse(nil)
 	return
 }
 
@@ -159,6 +159,6 @@ func (t *Tag) Delete(c *gin.Context) {
 		return
 	}
 
-	response.ToResponse(gin.H{"code": 0, "msg": "success"})
+	response.ToResponse(nil)
 	return
 }

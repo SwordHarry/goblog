@@ -38,7 +38,7 @@
         - convert.go 类型转换，将 url 中的查询字符串进行转换处理
     - app
         - pagination.go 分页处理
-        - app.go 响应处理
+        - response.go 响应处理
 ### 6.swagger 接口文档
 - docs: swag init 自动生成
     - docs.go
