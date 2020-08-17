@@ -27,6 +27,9 @@ func (m *MethodLimiter) Key(c *gin.Context) string {
 }
 
 func (m *MethodLimiter) GetBucket(key string) (*ratelimit.Bucket, bool) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+	// map 不是并发安全
 	bucket, ok := m.limiterBuckets[key]
 	return bucket, ok
 }
