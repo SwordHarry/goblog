@@ -58,6 +58,27 @@ func (m *Model) UpdateArticle(param *dao.Article, tagID uint32) error {
 		"tag_id":      tagID,
 		"modified_by": param.ModifiedBy,
 	}
+	// 先查找该 article_id 是否已绑定了标签
+	err = tx.Where("article_id = ? and is_del = ?", param.ID, 0).First(&articleTag).Error
+	if err != nil {
+		// 找不到则插入
+		if err == gorm.ErrRecordNotFound {
+			articleTag.TagID = tagID
+			articleTag.CreatedBy = param.ModifiedBy
+			articleTag.ModifiedOn = 0
+			err := tx.Create(articleTag).Error
+			if err != nil {
+				tx.Rollback()
+				return err
+			}
+			tx.Commit()
+			return nil
+		} else {
+			tx.Rollback()
+			return err
+		}
+	}
+	// 找到则更新
 	err = tx.Model(&articleTag).
 		Where("article_id = ? and is_del = ?", param.ID, 0).Limit(1).Updates(atValues).Error
 	if err != nil {
