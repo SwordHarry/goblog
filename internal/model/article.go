@@ -133,7 +133,8 @@ func (m *Model) DeleteArticle(id uint32) error {
 func (m *Model) CountArticles(state uint8) (int, error) {
 	var count int
 	a := dao.Article{State: state}
-	err := m.engine.Table(a.TableName()).Where("state = ?", state).Count(&count).Error
+	// 没有被软删且没有被禁用
+	err := m.engine.Table(a.TableName()).Where("state = ? and is_del = ?", state, 0).Count(&count).Error
 	return count, err
 }
 
