@@ -104,3 +104,19 @@ func (svc *Service) UpdateArticle(param *request.UpdateArticleRequest) error {
 func (svc *Service) DeleteArticle(param *request.DeleteArticleRequest) error {
 	return svc.model.DeleteArticle(param.ArticleID)
 }
+
+// 根据 title 获取文章
+func (svc *Service) SearchArticlesByTitle(param *request.SearchArticleRequest, pager *app.Pager) ([]*dao.Article, int, error) {
+	param.Title = "%" + param.Title + "%"
+	totalRow, err := svc.model.CountArticlesByTitle(param.State, param.Title)
+	if err != nil {
+		return nil, 0, err
+	}
+	articles, err := svc.model.SearchArticlesByTitle(
+		param.Title, param.State,
+		app.GetPageOffset(pager.Page, pager.PageSize), pager.PageSize)
+	if err != nil {
+		return nil, 0, err
+	}
+	return articles, totalRow, nil
+}

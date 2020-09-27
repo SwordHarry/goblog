@@ -22,7 +22,13 @@
 {{end}}
 
 {{define "header"}}
-<ul class="header">
-    <li><a href="/">首页</a></li>
-</ul>
+<div class="header">
+    <div><a href="/">首页</a></div>
+    <div class="title-search">
+        <form method="POST" action="search">
+            <input class="title-input" name="title" placeholder="输入标题搜索文章">
+            <input class="title-submit" type="submit" value="搜索">
+        </form>
+    </div>
+</div>
 {{end}}

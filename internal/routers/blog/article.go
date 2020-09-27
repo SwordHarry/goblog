@@ -158,6 +158,37 @@ func (a *Article) ViewIndex(c *gin.Context) {
 	})
 }
 
+func (a *Article) Search(c *gin.Context) {
+	param := request.SearchArticleRequest{}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		common.InvalidForBind(c, response, errs)
+		return
+	}
+	svc := service.New(c.Request.Context())
+	pager := app.Pager{Page: app.GetPage(c), PageSize: app.GetPageSize(c)}
+	// 根据 title 获取文章
+	// 获取 标签 列表
+	tags, err := getTags(&svc)
+	if err != nil {
+		global.Logger.Errorf(c, "svc.GetTagList err: %v", err)
+		common.ViewErr(c, err)
+	}
+	articles, totalRow, err := svc.SearchArticlesByTitle(&param, &pager)
+	pager.TotalRows = totalRow
+	if err != nil {
+		global.Logger.Errorf(c, "svc.SearchArticlesByTitle err: %v", err)
+		common.ViewErr(c, err)
+	}
+	common.View(c, indexHtml, gin.H{
+		"articles":  articles,
+		"tags":      tags,
+		"pager":     &pager,
+		"totalPage": getTotalPage(&pager),
+	})
+}
+
 // —————————————————————————————— api begin ————————————————————————————————
 
 // @Summary 创建文章

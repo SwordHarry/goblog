@@ -38,3 +38,8 @@ type UpdateArticleRequest struct {
 type DeleteArticleRequest struct {
 	ArticleID uint32 `form:"article_id" json:"article_id" binding:"required,gte=1"`
 }
+
+type SearchArticleRequest struct {
+	Title string `form:"title" json:"title" binding:"required"`
+	State uint8  `form:"state,default=1" json:"state,default=1" binding:"oneof=0 1"`
+}

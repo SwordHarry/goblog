@@ -94,6 +94,7 @@ func NewRouter() *gin.Engine {
 		r.GET("/articles/:id", article.Get)
 		r.GET("/articles_tag/:id", article.ListByTagID)
 		r.GET("/", article.ViewIndex)
+		r.POST("/search", article.Search)
 		// 注册 swagger 接口文档路由
 		apiV1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}

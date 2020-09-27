@@ -206,3 +206,29 @@ func (m *Model) CountArticleByTID(tagID uint32, state uint8) (int, error) {
 	}
 	return count, nil
 }
+
+// count articles by title
+func (m *Model) CountArticlesByTitle(state uint8, title string) (int, error) {
+	var count int
+	a := dao.Article{State: state}
+	// 没有被软删且没有被禁用
+	err := m.engine.Table(a.TableName()).Where("state = ? and is_del = ? and title like ?", state, 0, title).Count(&count).Error
+	return count, err
+}
+
+// search articles by title
+func (m *Model) SearchArticlesByTitle(title string, state uint8, pageOffset, pageSize int) ([]*dao.Article, error) {
+	var result []*dao.Article
+	db := m.engine
+	if pageOffset >= 0 && pageSize > 0 {
+		db = db.Offset(pageOffset).Limit(pageSize)
+	}
+	err := db.
+		Where("state = ? and is_del = ? and title like ?", state, 0, title).
+		Order("created_on DESC").
+		Find(&result).Error
+	if err != nil {
+		return result, err
+	}
+	return result, nil
+}
