@@ -24,7 +24,9 @@
             </div>
         </div>
     {{end}}
-
+    {{if .message}}
+        <div class="message">{{.message}}</div>
+    {{end}}
     <ul class="pagination">
         {{if gt .pager.Page 1}}
         <li value="上一页"><a href="/?page={{sub .pager.Page 1}}">上一页</a></li>

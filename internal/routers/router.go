@@ -86,7 +86,6 @@ func NewRouter() *gin.Engine {
 		apiV1.DELETE("/tags/:id", tag.Delete)
 		apiV1.PUT("/tags/:id", tag.Update)
 		apiV1.PATCH("/tags/:id/state", tag.Update)
-		//r.GET("/tags", tag.List)
 		// articles
 		apiV1.POST("/articles", article.Create)
 		apiV1.DELETE("/articles/:id", article.Delete)
@@ -94,7 +93,7 @@ func NewRouter() *gin.Engine {
 		r.GET("/articles/:id", article.Get)
 		r.GET("/articles_tag/:id", article.ListByTagID)
 		r.GET("/", article.ViewIndex)
-		r.POST("/search", article.Search)
+		r.POST("/search", article.SearchArticles)
 		// 注册 swagger 接口文档路由
 		apiV1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}

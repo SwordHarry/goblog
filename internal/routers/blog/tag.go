@@ -99,7 +99,6 @@ func (t *Tag) Create(c *gin.Context) {
 		return
 	}
 	response.ToResponse(nil)
-	return
 }
 
 // @Summary 更新标签
@@ -131,7 +130,6 @@ func (t *Tag) Update(c *gin.Context) {
 		return
 	}
 	response.ToResponse(nil)
-	return
 }
 
 // @Summary 删除标签
@@ -160,5 +158,4 @@ func (t *Tag) Delete(c *gin.Context) {
 	}
 
 	response.ToResponse(nil)
-	return
 }

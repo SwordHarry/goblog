@@ -74,3 +74,8 @@ ul.pagination p {
     display: inline-block;
     vertical-align: middle;
 }
+.message {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 26px;
+}

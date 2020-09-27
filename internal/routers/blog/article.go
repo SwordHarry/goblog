@@ -59,12 +59,14 @@ func (a *Article) Get(c *gin.Context) {
 	if err != nil {
 		global.Logger.Errorf(c, "util.GetMd err: %v", err)
 		common.ViewErr(c, err)
+		return
 	}
 	// 获取 标签 列表
 	tags, err := getTags(&svc)
 	if err != nil {
 		global.Logger.Errorf(c, "svc.GetTagList err: %v", err)
 		common.ViewErr(c, err)
+		return
 	}
 	common.View(c, articleHtml, gin.H{
 		"article": article,
@@ -106,12 +108,18 @@ func (a *Article) ListByTagID(c *gin.Context) {
 	if err != nil {
 		global.Logger.Errorf(c, "svc.GetTagList err: %v", err)
 		common.ViewErr(c, err)
+		return
+	}
+	var message string
+	if count == 0 {
+		message = "找不到相关文章啦！"
 	}
 	common.View(c, indexHtml, gin.H{
 		"articles":  articles,
 		"tags":      tags,
 		"pager":     &pager,
 		"totalPage": getTotalPage(&pager),
+		"message":   message,
 	})
 	return
 }
@@ -149,6 +157,7 @@ func (a *Article) ViewIndex(c *gin.Context) {
 	if err != nil {
 		global.Logger.Errorf(c, "svc.GetTagList err: %v", err)
 		common.ViewErr(c, err)
+		return
 	}
 	common.View(c, indexHtml, gin.H{
 		"articles":  articles,
@@ -158,34 +167,49 @@ func (a *Article) ViewIndex(c *gin.Context) {
 	})
 }
 
-func (a *Article) Search(c *gin.Context) {
+// @Summary 获取多个文章
+// @Produce json
+// @Param title formData string true "文章标题"
+// @Param state query int false "状态"
+// @Success 200 {object} dao.ArticleSwagger "成功"
+// @Failure 400 {object} errcode.Error "请求错误"
+// @Failure 500 {object} errcode.Error "内部错误"
+// @Router /search [post]
+func (a *Article) SearchArticles(c *gin.Context) {
 	param := request.SearchArticleRequest{}
-	response := app.NewResponse(c)
-	valid, errs := app.BindAndValid(c, &param)
-	if !valid {
-		common.InvalidForBind(c, response, errs)
-		return
-	}
 	svc := service.New(c.Request.Context())
-	pager := app.Pager{Page: app.GetPage(c), PageSize: app.GetPageSize(c)}
-	// 根据 title 获取文章
 	// 获取 标签 列表
 	tags, err := getTags(&svc)
 	if err != nil {
 		global.Logger.Errorf(c, "svc.GetTagList err: %v", err)
 		common.ViewErr(c, err)
+		return
 	}
+	valid, _ := app.BindAndValid(c, &param)
+	if !valid {
+		a.ViewIndex(c)
+		return
+	}
+
+	pager := app.Pager{Page: app.GetPage(c), PageSize: app.GetPageSize(c)}
+	// 根据 title 获取文章
 	articles, totalRow, err := svc.SearchArticlesByTitle(&param, &pager)
 	pager.TotalRows = totalRow
 	if err != nil {
 		global.Logger.Errorf(c, "svc.SearchArticlesByTitle err: %v", err)
 		common.ViewErr(c, err)
+		return
+	}
+	var message string
+	if totalRow == 0 {
+		message = "找不到相关文章啦！"
 	}
 	common.View(c, indexHtml, gin.H{
 		"articles":  articles,
 		"tags":      tags,
 		"pager":     &pager,
 		"totalPage": getTotalPage(&pager),
+		"message":   message,
 	})
 }
 
@@ -249,7 +273,6 @@ func (a *Article) Create(c *gin.Context) {
 		return
 	}
 	response.ToResponse(gin.H{"data": article})
-	return
 }
 
 // @Summary 更新文章
@@ -294,7 +317,6 @@ func (a *Article) Update(c *gin.Context) {
 		return
 	}
 	response.ToResponse(nil)
-	return
 }
 
 // @Summary 删除文章
@@ -320,7 +342,6 @@ func (a *Article) Delete(c *gin.Context) {
 		return
 	}
 	response.ToResponse(nil)
-	return
 }
 
 // —————————————————————————————— api end ————————————————————————————————
